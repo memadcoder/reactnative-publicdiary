@@ -14,15 +14,16 @@ class Home extends Component {
     super(props);
     this.state = {
       posts: POSTS,
-      heart: false,
-      like: false,
-      unlike: false,
-      share: false,
-      name: "Madhav",
+      loggedInId: 1,
     };
   }
   componentDidMount() {
     //console.log("is this answer=>", this.state.posts);
+  }
+
+  updateHighlight(id) {
+    // this.setState({ heart: !this.state.heart });
+    // console.log(id);
   }
 
   render() {
@@ -55,6 +56,7 @@ class Home extends Component {
                     name: item.username,
                     userId: item.userId,
                     postId: item.id,
+                    loggedIn: this.state.loggedInId,
                   })
                 }
               />
@@ -85,44 +87,58 @@ class Home extends Component {
                 <Icon
                   raised
                   reverse
-                  name={this.state.heart ? "heart" : "heart-o"}
+                  name={
+                    item.highlight.some(
+                      (a) => a.userId === this.state.loggedInId
+                    )
+                      ? "heart"
+                      : "heart-o"
+                  }
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() => this.setState({ heart: !this.state.heart })}
+                  onPress={() => this.updateHighlight(item.id)}
                 />
                 <Text>Favorite</Text>
-                <Text>9</Text>
+                <Text>{item.highlight.length}</Text>
               </View>
               <View style={styles.icons}>
                 <Icon
                   raised
                   reverse
-                  name={this.state.like ? "thumbs-up" : "thumbs-o-up"}
+                  name={
+                    item.likes.some((a) => a.userId === this.state.loggedInId)
+                      ? "thumbs-up"
+                      : "thumbs-o-up"
+                  }
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() =>
-                    this.setState({ like: !this.state.like, unlike: false })
-                  }
+                  // onPress={() =>
+                  //   this.setState({ like: !this.state.like, unlike: false })
+                  // }
                 />
                 <Text>Likes</Text>
-                <Text>346</Text>
+                <Text>{item.likes.length}</Text>
               </View>
               <View style={styles.icons}>
                 <Icon
                   raised
                   reverse
-                  name={this.state.unlike ? "thumbs-down" : "thumbs-o-down"}
+                  name={
+                    item.unlikes.some((a) => a.userId === this.state.loggedInId)
+                      ? "thumbs-down"
+                      : "thumbs-o-down"
+                  }
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() =>
-                    this.setState({ unlike: !this.state.unlike, like: false })
-                  }
+                  // onPress={() =>
+                  //   this.setState({ unlike: !this.state.unlike, like: false })
+                  // }
                 />
-                <Text>UnLikes</Text>
-                <Text>566</Text>
+                <Text>Unlikes</Text>
+                <Text>{item.unlikes.length}</Text>
               </View>
               <View style={styles.icons}>
                 <Icon
@@ -134,8 +150,8 @@ class Home extends Component {
                   color=""
                   onPress={() => alert("share")}
                 />
-                <Text>Shares</Text>
-                <Text>100</Text>
+                <Text>Share</Text>
+                <Text>{item.shares.length}</Text>
               </View>
             </View>
           </View>

@@ -25,6 +25,7 @@ class UserDetail extends Component {
   render() {
     const ans = this.props.route.params;
     const id = ans.userId;
+    const loggedInId = ans.loggedIn;
     console.log("userId=>", id);
     const RenderDish = ({ item, index }) => {
       return (
@@ -58,10 +59,10 @@ class UserDetail extends Component {
           </View>
           <View style={styles.postContainer}>
             <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-              {item.name}
+              {item.title}
             </Text>
             <Text style={{ fontSize: 14, fontStyle: "italic" }}>
-              {item.category}
+              {item.date}
             </Text>
           </View>
           <Text style={{ fontSize: 16 }}>{item.description}</Text>
@@ -72,20 +73,28 @@ class UserDetail extends Component {
                 <Icon
                   raised
                   reverse
-                  name={this.state.heart ? "heart" : "heart-o"}
+                  name={
+                    item.highlight.some((a) => a.userId === loggedInId)
+                      ? "heart"
+                      : "heart-o"
+                  }
                   type="font-awesome"
                   size={32}
                   color=""
                   onPress={() => this.setState({ heart: !this.state.heart })}
                 />
                 <Text>Favorite</Text>
-                <Text>9</Text>
+                <Text>{item.highlight.length}</Text>
               </View>
               <View style={styles.icons}>
                 <Icon
                   raised
                   reverse
-                  name={this.state.like ? "thumbs-up" : "thumbs-o-up"}
+                  name={
+                    item.likes.some((a) => a.userId === loggedInId)
+                      ? "thumbs-up"
+                      : "thumbs-o-up"
+                  }
                   type="font-awesome"
                   size={32}
                   color=""
@@ -94,13 +103,17 @@ class UserDetail extends Component {
                   }
                 />
                 <Text>Likes</Text>
-                <Text>346</Text>
+                <Text>{item.likes.length}</Text>
               </View>
               <View style={styles.icons}>
                 <Icon
                   raised
                   reverse
-                  name={this.state.unlike ? "thumbs-down" : "thumbs-o-down"}
+                  name={
+                    item.unlikes.some((a) => a.userId === loggedInId)
+                      ? "thumbs-down"
+                      : "thumbs-o-down"
+                  }
                   type="font-awesome"
                   size={32}
                   color=""
@@ -109,7 +122,7 @@ class UserDetail extends Component {
                   }
                 />
                 <Text>UnLikes</Text>
-                <Text>566</Text>
+                <Text>{item.unlikes.length}</Text>
               </View>
               <View style={styles.icons}>
                 <Icon
@@ -122,7 +135,7 @@ class UserDetail extends Component {
                   onPress={() => alert("share")}
                 />
                 <Text>Shares</Text>
-                <Text>100</Text>
+                <Text>{item.shares.length}</Text>
               </View>
             </View>
           </View>

@@ -7,6 +7,10 @@ export default {
       username: "memadcoder",
       image: "images/uthappizza.png",
       date: "Nov 16 2020",
+      likes: [{ userId: 2 }],
+      unlikes: [{ userId: 2 }],
+      highlight: [{ userId: 1 }, { userId: 2 }],
+      shares: [{ userId: 2 }],
       title: "Title 1stt",
       description:
         "A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer.",
@@ -19,6 +23,10 @@ export default {
       image: "images/uthappizza.png",
       date: "Mar 6 2020",
       title: "Title 2nd",
+      likes: [{ userId: 1 }],
+      unlikes: [{ userId: 2 }],
+      highlight: [{ userId: 2 }],
+      shares: [{ userId: 1 }],
       description:
         "A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer.",
     },
@@ -30,6 +38,10 @@ export default {
       image: "images/uthappizza.png",
       date: "Jan 2 2020",
       title: "Title 3rd",
+      likes: [{ userId: 3 }, { userId: 2 }, { userId: 1 }],
+      unlikes: [{ userId: 3 }],
+      highlight: [{ userId: 3 }],
+      shares: [{ userId: 3 }],
       description:
         "A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer.",
     },
@@ -41,6 +53,10 @@ export default {
       image: "images/uthappizza.png",
       date: "Dec 5 2019",
       title: "Title 4th",
+      likes: [{ userId: 2 }, { userId: 1 }],
+      unlikes: [{ userId: 2 }],
+      highlight: [{ userId: 1 }, { userId: 3 }],
+      shares: [{ userId: 2 }],
       description:
         "A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer.",
     },
