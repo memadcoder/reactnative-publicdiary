@@ -82,5 +82,10 @@ export default {
       userId: 3,
       postId: 1,
     },
+    {
+      id: 4,
+      userId: 1,
+      postId: 0,
+    },
   ],
 };

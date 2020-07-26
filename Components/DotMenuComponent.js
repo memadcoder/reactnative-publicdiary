@@ -10,7 +10,8 @@ import {
 } from "react-native-popup-menu";
 import { Icon } from "react-native-elements";
 
-function ThreeDotMenu() {
+function ThreeDotMenu(props) {
+  console.log("loggedIN Id==>", JSON.stringify(props));
   const [loggedIn, setLogIn] = useState(true);
   if (loggedIn) {
     return (
@@ -64,8 +65,6 @@ function ThreeDotMenu() {
       </View>
     );
   }
-
-  return <DotMenu />;
 }
 
 export default ThreeDotMenu;

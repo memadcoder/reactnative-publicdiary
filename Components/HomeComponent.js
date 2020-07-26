@@ -8,6 +8,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 import Navigator from "./ReportPopupMenu";
 import POSTS from "../shared/posts";
+import FloatMenu from "./FloatingMenu";
 
 class Home extends Component {
   constructor(props) {
@@ -15,22 +16,45 @@ class Home extends Component {
     this.state = {
       posts: POSTS,
       loggedInId: 1,
+      // highlighted: [{ Id: 1 }],
     };
   }
   componentDidMount() {
     //console.log("is this answer=>", this.state.posts);
+    console.log(this.state.highlighted);
   }
+  // updateHighlight(postId) {
+  //   console.log(postId);
+  //   if (this.state.highlighted.findIndex((id) => id.Id === postId) === -1) {
+  //     console.log("added to favorites");
 
-  updateHighlight(id) {
-    // this.setState({ heart: !this.state.heart });
-    // console.log(id);
-  }
+  //     const update = {
+  //       Id: postId,
+  //     };
+  //     var newState = this.state.highlighted.concat(update);
+  //     this.setState({ highlighted: newState });
+  //     console.log(this.state.highlighted);
+  //     postId = null;
+  //   } else {
+  //     console.log("removing favorites");
+  //     var newState = this.state.highlighted.filter((hi) => hi.Id !== postId);
+  //     this.setState({ highlighted: newState });
+  //     postId = null;
+  //   }
+  //   // console.log("loggedInId=>", this.state.loggedInId, "postId=>", post);
+  //   // const highlights = this.state.posts.highlights.some(
+  //   //   (highlight) =>
+  //   //     highlight.postId === post && highlight.userId === this.state.loggedInId
+  //   // );
+  //   // console.log("exists=>", highlights);
+  // }
 
   render() {
     const { navigation } = this.props;
 
     const RenderPost = ({ item, index }) => {
       //console.log("post=>, index=>", item, index);
+      // console.log("item id", item.id);
       return (
         <View
           key={index}
@@ -68,7 +92,7 @@ class Home extends Component {
                 alignContent: "flex-start",
               }}
             >
-              <Navigator />
+              <Navigator loggedInId={this.state.loggedInId} />
             </View>
           </View>
           <View style={styles.postContainer}>
@@ -97,7 +121,7 @@ class Home extends Component {
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() => this.updateHighlight(item.id)}
+                  // onPress={() => this.updateHighlight(item.id)}
                 />
                 <Text>Favorite</Text>
                 <Text>{item.highlight.length}</Text>
@@ -165,6 +189,7 @@ class Home extends Component {
           renderItem={RenderPost}
           keyExtractor={(item) => item.id.toString()}
         />
+        <FloatMenu navigation={navigation} />
       </SafeAreaView>
     );
   }

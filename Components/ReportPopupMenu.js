@@ -77,6 +77,7 @@ class Navigator extends Component {
     this.setState({ modalVisible: !this.state.modalVisible });
   }
   render() {
+    console.log("received props=>", this.props);
     return (
       <View>
         <MenuProvider>

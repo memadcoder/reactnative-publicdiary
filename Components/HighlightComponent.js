@@ -7,28 +7,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import Navigator from "./ReportPopupMenu";
+import POSTS from "../shared/posts";
 
 class Highlight extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dishes: [
-        {
-          id: 0,
-          name: "Uthappizza",
-          image: "images/uthappizza.png",
-          category: "mains",
-          label: "Hot",
-          price: "4.99",
-          featured: true,
-          description:
-            "A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer.A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer.A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer.",
-        },
-      ],
-      heart: false,
-      like: false,
-      unlike: false,
-      share: false,
+      posts: POSTS,
+      loggedInId: 1,
     };
   }
 
@@ -36,9 +22,17 @@ class Highlight extends Component {
     // const { route } = props;
     // const { item } = route.params;
 
+    const ans = this.state.posts.posts.filter(
+      (result) => result.highlight[0].userId === this.state.loggedInId
+    );
+    console.log(ans);
+
     const RenderHighlight = ({ item, index }) => {
       return (
-        <View style={{ backgroundColor: "white", margin: 10, padding: 10 }}>
+        <View
+          key={index}
+          style={{ backgroundColor: "white", margin: 10, padding: 10 }}
+        >
           <View
             style={{
               flex: 1,
@@ -51,8 +45,8 @@ class Highlight extends Component {
                   source: { uri: "./assets/favicon.png" },
                   showEditButton: true,
                 }}
-                title="Madhav Gautam"
-                subtitle="@memadcoder"
+                title={item.user}
+                subtitle={item.username}
                 chevron
               />
             </View>
@@ -68,10 +62,10 @@ class Highlight extends Component {
           </View>
           <View style={styles.postContainer}>
             <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-              {item.name}
+              {item.title}
             </Text>
             <Text style={{ fontSize: 14, fontStyle: "italic" }}>
-              {item.category}
+              {item.date}
             </Text>
           </View>
           <Text style={{ fontSize: 16 }}>{item.description}</Text>
@@ -82,20 +76,30 @@ class Highlight extends Component {
                 <Icon
                   raised
                   reverse
-                  name={this.state.heart ? "heart" : "heart-o"}
+                  name={
+                    item.highlight.some(
+                      (a) => a.userId === this.state.loggedInId
+                    )
+                      ? "heart"
+                      : "heart-o"
+                  }
                   type="font-awesome"
                   size={32}
                   color=""
                   onPress={() => this.setState({ heart: !this.state.heart })}
                 />
                 <Text>Favorite</Text>
-                <Text>9</Text>
+                <Text>{item.highlight.length}</Text>
               </View>
               <View style={styles.icons}>
                 <Icon
                   raised
                   reverse
-                  name={this.state.like ? "thumbs-up" : "thumbs-o-up"}
+                  name={
+                    item.likes.some((a) => a.userId === this.state.loggedInId)
+                      ? "thumbs-up"
+                      : "thumbs-o-up"
+                  }
                   type="font-awesome"
                   size={32}
                   color=""
@@ -104,13 +108,17 @@ class Highlight extends Component {
                   }
                 />
                 <Text>Likes</Text>
-                <Text>346</Text>
+                <Text>{item.likes.length}</Text>
               </View>
               <View style={styles.icons}>
                 <Icon
                   raised
                   reverse
-                  name={this.state.unlike ? "thumbs-down" : "thumbs-o-down"}
+                  name={
+                    item.unlikes.some((a) => a.userId === this.state.loggedInId)
+                      ? "thumbs-down"
+                      : "thumbs-o-down"
+                  }
                   type="font-awesome"
                   size={32}
                   color=""
@@ -119,7 +127,7 @@ class Highlight extends Component {
                   }
                 />
                 <Text>UnLikes</Text>
-                <Text>566</Text>
+                <Text>{item.unlikes.length}</Text>
               </View>
               <View style={styles.icons}>
                 <Icon
@@ -132,17 +140,18 @@ class Highlight extends Component {
                   onPress={() => alert("share")}
                 />
                 <Text>Shares</Text>
-                <Text>100</Text>
+                <Text>{item.shares.length}</Text>
               </View>
             </View>
           </View>
         </View>
       );
     };
+
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
-          data={this.state.dishes}
+          data={ans}
           renderItem={RenderHighlight}
           keyExtractor={(item) => item.id.toString()}
         />

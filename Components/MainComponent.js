@@ -16,6 +16,7 @@ import Constants from "expo-constants";
 import UserDetail from "./UserDetailComponent";
 import ThreeDotMenu from "./DotMenuComponent";
 import Highlight from "./HighlightComponent";
+import PostModal from "./PostModalComponent";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -85,6 +86,13 @@ export default function Main() {
           options={({ route }) => ({
             title: route.params.name,
             headerRight: () => <ThreeDotMenu />,
+          })}
+        />
+        <Stack.Screen
+          name="PostModal"
+          component={PostModal}
+          options={() => ({
+            title: "New Post",
           })}
         />
       </Stack.Navigator>
