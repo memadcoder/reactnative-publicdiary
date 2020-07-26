@@ -20,22 +20,20 @@ class PostModal extends Component {
       user: "Madhav",
       username: "memadcoder",
       date: "Dec 5 2019",
-      likes: [],
-      unlikes: [],
-      highlight: [],
-      shares: [],
+      likes: [{ userId: "" }],
+      unlikes: [{ userId: "" }],
+      highlight: [{ userId: "" }],
+      shares: [{ userId: "" }],
       title: this.state.title,
       description: this.state.description,
     };
-    console.log("post Detail", newPost);
     this.setState({ posts: this.state.posts.posts.push(newPost) });
-    console.log("new post", this.state.posts.posts);
+
     alert("Post SuccessFul");
     navigation.navigate("Home");
   }
 
   componentDidMount() {
-    console.log("reached");
     this.setState({ modalVisible: true });
   }
   render() {
