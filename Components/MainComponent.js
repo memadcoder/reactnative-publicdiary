@@ -18,6 +18,7 @@ import ThreeDotMenu from "./DotMenuComponent";
 import Highlight from "./HighlightComponent";
 import PostModal from "./PostModalComponent";
 import ReportModal from "./ReportModalComponent";
+import SignIn from "./SignInComponent";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -64,6 +65,18 @@ function MyDrawer() {
       <Drawer.Screen
         name="Highlights"
         component={Highlight}
+        options={{
+          drawerIcon: (config) => (
+            <Icon
+              size={23}
+              name={Platform.OS === "android" ? "md-heart" : "ios-heart"}
+            ></Icon>
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="SignIn"
+        component={SignIn}
         options={{
           drawerIcon: (config) => (
             <Icon
