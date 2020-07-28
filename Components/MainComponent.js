@@ -81,7 +81,7 @@ function MyDrawer() {
           drawerIcon: (config) => (
             <Icon
               size={23}
-              name={Platform.OS === "android" ? "md-heart" : "ios-heart"}
+              name={Platform.OS === "android" ? "md-log-in" : "ios-log-in"}
             ></Icon>
           ),
         }}
