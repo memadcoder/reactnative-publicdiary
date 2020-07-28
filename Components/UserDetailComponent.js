@@ -8,7 +8,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 import POSTS from "../shared/posts";
 
-import Navigator from "./ReportPopupMenu";
+import ReportOptions from "./ReportOptionsComponent";
 
 class UserDetail extends Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class UserDetail extends Component {
     console.log("userId=>", id);
     const RenderDish = ({ item, index }) => {
       return (
-        <View style={{ backgroundColor: "white", margin: 10, padding: 10 }}>
+        <View style={styles.postContainer}>
           <View
             style={{
               flex: 1,
@@ -43,8 +43,7 @@ class UserDetail extends Component {
                   showEditButton: true,
                 }}
                 title={item.user}
-                subtitle={item.username}
-                chevron
+                subtitle={`@` + item.username}
               />
             </View>
             <View
@@ -54,7 +53,7 @@ class UserDetail extends Component {
                 alignContent: "flex-start",
               }}
             >
-              <Navigator />
+              <ReportOptions />
             </View>
           </View>
           <View style={styles.postContainer}>
@@ -65,7 +64,9 @@ class UserDetail extends Component {
               {item.date}
             </Text>
           </View>
-          <Text style={{ fontSize: 16 }}>{item.description}</Text>
+          <View style={styles.description}>
+            <Text style={{ fontSize: 16 }}>{item.description}</Text>
+          </View>
           <View style={styles.lineSeparator} />
           <View style={styles.reactionContainer}>
             <View style={styles.reactions}>
@@ -74,7 +75,7 @@ class UserDetail extends Component {
                   raised
                   reverse
                   name={
-                    item.highlight.some((a) => a.userId === loggedInId)
+                    item.highlight.some((a) => a === loggedInId)
                       ? "heart"
                       : "heart-o"
                   }
@@ -91,7 +92,7 @@ class UserDetail extends Component {
                   raised
                   reverse
                   name={
-                    item.likes.some((a) => a.userId === loggedInId)
+                    item.likes.some((a) => a === loggedInId)
                       ? "thumbs-up"
                       : "thumbs-o-up"
                   }
@@ -110,7 +111,7 @@ class UserDetail extends Component {
                   raised
                   reverse
                   name={
-                    item.unlikes.some((a) => a.userId === loggedInId)
+                    item.unlikes.some((a) => a === loggedInId)
                       ? "thumbs-down"
                       : "thumbs-o-down"
                   }
@@ -190,19 +191,22 @@ const styles = StyleSheet.create({
   },
   icons: {
     flex: 1,
-    alignContent: "space-between",
-    margin: 10,
-  },
-  line: {
-    borderWidth: 0.5,
-    borderColor: "black",
-    margin: 10,
+    alignContent: "space-around",
+    alignItems: "center",
+    marginTop: 5,
+    padding: 10,
   },
   lineSeparator: {
     borderColor: "black",
     borderWidth: 0.5,
     marginTop: 20,
   },
+  postContainer: {
+    backgroundColor: "white",
+    margin: 5,
+    padding: 10,
+  },
+  description: { marginLeft: 10 },
 });
 
 export default UserDetail;

@@ -17,6 +17,7 @@ import UserDetail from "./UserDetailComponent";
 import ThreeDotMenu from "./DotMenuComponent";
 import Highlight from "./HighlightComponent";
 import PostModal from "./PostModalComponent";
+import ReportModal from "./ReportModalComponent";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -26,6 +27,7 @@ function MyDrawer() {
 
   return (
     <Drawer.Navigator
+      drawerType="permanent"
       drawerType="permanent"
       drawerType={dimensions.width >= 768 ? "permanent" : "front"}
       drawerStyle={{
@@ -93,6 +95,13 @@ export default function Main() {
           component={PostModal}
           options={() => ({
             title: "New Post",
+          })}
+        />
+        <Stack.Screen
+          name="ReportModal"
+          component={ReportModal}
+          options={() => ({
+            title: "Report",
           })}
         />
       </Stack.Navigator>

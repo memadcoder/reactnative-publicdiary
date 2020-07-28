@@ -6,8 +6,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import Icon from "react-native-vector-icons/FontAwesome";
 
-import Navigator from "./ReportPopupMenu";
-import POSTS from "../shared/posts";
+import ReportOptions from "./ReportOptionsComponent";
+import POSTS from "../shared/posts.js";
 import FloatMenu from "./FloatingMenu";
 
 class Home extends Component {
@@ -16,50 +16,50 @@ class Home extends Component {
     this.state = {
       posts: POSTS,
       loggedInId: 1,
-      // highlighted: [{ Id: 1 }],
     };
   }
   componentDidMount() {
-    //console.log("is this answer=>", this.state.posts);
-    console.log(this.state.highlighted);
+    console.log("initial", this.state.posts);
   }
-  // updateHighlight(postId) {
-  //   console.log(postId);
-  //   if (this.state.highlighted.findIndex((id) => id.Id === postId) === -1) {
-  //     console.log("added to favorites");
 
-  //     const update = {
-  //       Id: postId,
-  //     };
-  //     var newState = this.state.highlighted.concat(update);
-  //     this.setState({ highlighted: newState });
-  //     console.log(this.state.highlighted);
-  //     postId = null;
-  //   } else {
-  //     console.log("removing favorites");
-  //     var newState = this.state.highlighted.filter((hi) => hi.Id !== postId);
-  //     this.setState({ highlighted: newState });
-  //     postId = null;
-  //   }
-  //   // console.log("loggedInId=>", this.state.loggedInId, "postId=>", post);
-  //   // const highlights = this.state.posts.highlights.some(
-  //   //   (highlight) =>
-  //   //     highlight.postId === post && highlight.userId === this.state.loggedInId
-  //   // );
-  //   // console.log("exists=>", highlights);
-  // }
+  componentDidUpdate() {
+    //console.log("updated", this.state.posts.posts);
+  }
+
+  async handleHighligted(pid) {
+    const postState = this.state.posts.posts;
+    const post = postState.filter((post) => post.id === pid);
+    const intermediate = this.state.posts.posts.filter(
+      (post) => post.id !== pid
+    );
+    console.log("intermediate state=====>", intermediate);
+    await this.setState({
+      posts: this.state.posts.posts.filter((post) => post.id !== pid),
+    });
+    await this.setState({
+      ...this.state.posts.posts,
+      intermediate,
+    });
+    console.log("before push state", this.state.posts);
+
+    post[0].highlight.push(this.state.loggedInId);
+
+    const toPost = post[0];
+    console.log("object to push======>", toPost);
+    await this.setState({ posts: this.state.posts.posts.push(toPost) });
+    console.log("current state", this.state.posts);
+  }
+
+  handleLiked() {}
+
+  handleUnliked() {}
 
   render() {
     const { navigation } = this.props;
 
     const RenderPost = ({ item, index }) => {
-      //console.log("post=>, index=>", item, index);
-      // console.log("item id", item.id);
       return (
-        <View
-          key={index}
-          style={{ backgroundColor: "white", margin: 10, padding: 10 }}
-        >
+        <View key={index} style={styles.postContainer}>
           <View
             style={{
               flex: 1,
@@ -73,8 +73,7 @@ class Home extends Component {
                   showEditButton: true,
                 }}
                 title={item.user}
-                subtitle={item.username}
-                chevron
+                subtitle={`@` + item.username}
                 onPress={() =>
                   navigation.navigate("UserDetail", {
                     name: item.username,
@@ -92,7 +91,10 @@ class Home extends Component {
                 alignContent: "flex-start",
               }}
             >
-              <Navigator loggedInId={this.state.loggedInId} />
+              <ReportOptions
+                loggedInId={this.state.loggedInId}
+                navigation={navigation}
+              />
             </View>
           </View>
           <View style={styles.postContainer}>
@@ -103,7 +105,9 @@ class Home extends Component {
               {item.date}
             </Text>
           </View>
-          <Text style={{ fontSize: 16 }}>{item.description}</Text>
+          <View style={styles.description}>
+            <Text style={{ fontSize: 16 }}>{item.description}</Text>
+          </View>
           <View style={styles.lineSeparator} />
           <View style={styles.reactionContainer}>
             <View style={styles.reactions}>
@@ -112,16 +116,14 @@ class Home extends Component {
                   raised
                   reverse
                   name={
-                    item.highlight.some(
-                      (a) => a.userId === this.state.loggedInId
-                    )
+                    item.highlight.some((a) => a === this.state.loggedInId)
                       ? "heart"
                       : "heart-o"
                   }
                   type="font-awesome"
                   size={32}
                   color=""
-                  // onPress={() => this.updateHighlight(item.id)}
+                  onPress={() => this.handleHighligted(item.id)}
                 />
                 <Text>Favorite</Text>
                 <Text>{item.highlight.length}</Text>
@@ -131,7 +133,7 @@ class Home extends Component {
                   raised
                   reverse
                   name={
-                    item.likes.some((a) => a.userId === this.state.loggedInId)
+                    item.likes.some((a) => a === this.state.loggedInId)
                       ? "thumbs-up"
                       : "thumbs-o-up"
                   }
@@ -150,16 +152,16 @@ class Home extends Component {
                   raised
                   reverse
                   name={
-                    item.unlikes.some((a) => a.userId === this.state.loggedInId)
+                    item.unlikes.some((a) => a === this.state.loggedInId)
                       ? "thumbs-down"
                       : "thumbs-o-down"
                   }
                   type="font-awesome"
                   size={32}
                   color=""
-                  // onPress={() =>
-                  //   this.setState({ unlike: !this.state.unlike, like: false })
-                  // }
+                  onPress={() =>
+                    this.setState({ unlike: !this.state.unlike, like: false })
+                  }
                 />
                 <Text>Unlikes</Text>
                 <Text>{item.unlikes.length}</Text>
@@ -229,19 +231,22 @@ const styles = StyleSheet.create({
   },
   icons: {
     flex: 1,
-    alignContent: "space-between",
-    margin: 10,
-  },
-  line: {
-    borderWidth: 0.5,
-    borderColor: "black",
-    margin: 10,
+    alignContent: "space-around",
+    alignItems: "center",
+    marginTop: 5,
+    padding: 10,
   },
   lineSeparator: {
     borderColor: "black",
     borderWidth: 0.5,
     marginTop: 20,
   },
+  postContainer: {
+    backgroundColor: "white",
+    margin: 5,
+    padding: 10,
+  },
+  description: { marginLeft: 10 },
 });
 
 export default Home;

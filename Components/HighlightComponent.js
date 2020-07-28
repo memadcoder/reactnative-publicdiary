@@ -6,7 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import Icon from "react-native-vector-icons/FontAwesome";
 
-import Navigator from "./ReportPopupMenu";
+import ReportOptions from "./ReportOptionsComponent";
 import POSTS from "../shared/posts";
 
 class Highlight extends Component {
@@ -23,16 +23,13 @@ class Highlight extends Component {
     // const { item } = route.params;
 
     const ans = this.state.posts.posts.filter(
-      (result) => result.highlight[0].userId === this.state.loggedInId
+      (result) => result.highlight == this.state.loggedInId
     );
-    console.log(ans);
+    console.log("ans=>", ans);
 
     const RenderHighlight = ({ item, index }) => {
       return (
-        <View
-          key={index}
-          style={{ backgroundColor: "white", margin: 10, padding: 10 }}
-        >
+        <View key={index} style={styles.postContainer}>
           <View
             style={{
               flex: 1,
@@ -46,8 +43,7 @@ class Highlight extends Component {
                   showEditButton: true,
                 }}
                 title={item.user}
-                subtitle={item.username}
-                chevron
+                subtitle={`@` + item.username}
               />
             </View>
             <View
@@ -57,7 +53,7 @@ class Highlight extends Component {
                 alignContent: "flex-start",
               }}
             >
-              <Navigator />
+              <ReportOptions />
             </View>
           </View>
           <View style={styles.postContainer}>
@@ -68,7 +64,9 @@ class Highlight extends Component {
               {item.date}
             </Text>
           </View>
-          <Text style={{ fontSize: 16 }}>{item.description}</Text>
+          <View style={styles.description}>
+            <Text style={{ fontSize: 16 }}>{item.description}</Text>
+          </View>
           <View style={styles.lineSeparator} />
           <View style={styles.reactionContainer}>
             <View style={styles.reactions}>
@@ -77,9 +75,7 @@ class Highlight extends Component {
                   raised
                   reverse
                   name={
-                    item.highlight.some(
-                      (a) => a.userId === this.state.loggedInId
-                    )
+                    item.highlight.some((a) => a === this.state.loggedInId)
                       ? "heart"
                       : "heart-o"
                   }
@@ -96,7 +92,7 @@ class Highlight extends Component {
                   raised
                   reverse
                   name={
-                    item.likes.some((a) => a.userId === this.state.loggedInId)
+                    item.likes.some((a) => a === this.state.loggedInId)
                       ? "thumbs-up"
                       : "thumbs-o-up"
                   }
@@ -115,7 +111,7 @@ class Highlight extends Component {
                   raised
                   reverse
                   name={
-                    item.unlikes.some((a) => a.userId === this.state.loggedInId)
+                    item.unlikes.some((a) => a === this.state.loggedInId)
                       ? "thumbs-down"
                       : "thumbs-o-down"
                   }
@@ -148,15 +144,33 @@ class Highlight extends Component {
       );
     };
 
-    return (
-      <SafeAreaView style={styles.container}>
-        <FlatList
-          data={ans}
-          renderItem={RenderHighlight}
-          keyExtractor={(item) => item.id.toString()}
-        />
-      </SafeAreaView>
-    );
+    if (ans.length === 0) {
+      return (
+        <SafeAreaView style={styles.container}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              alignContent: "center",
+              alignItems: "center",
+              alignSelf: "center",
+            }}
+          >
+            <Text style={styles.text}>You have no highlighted Post...</Text>
+          </View>
+        </SafeAreaView>
+      );
+    } else {
+      return (
+        <SafeAreaView style={styles.container}>
+          <FlatList
+            data={ans}
+            renderItem={RenderHighlight}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        </SafeAreaView>
+      );
+    }
   }
 }
 
@@ -194,19 +208,22 @@ const styles = StyleSheet.create({
   },
   icons: {
     flex: 1,
-    alignContent: "space-between",
-    margin: 10,
-  },
-  line: {
-    borderWidth: 0.5,
-    borderColor: "black",
-    margin: 10,
+    alignContent: "space-around",
+    alignItems: "center",
+    marginTop: 5,
+    padding: 10,
   },
   lineSeparator: {
     borderColor: "black",
     borderWidth: 0.5,
     marginTop: 20,
   },
+  postContainer: {
+    backgroundColor: "white",
+    margin: 5,
+    padding: 10,
+  },
+  description: { marginLeft: 10 },
 });
 
 export default Highlight;

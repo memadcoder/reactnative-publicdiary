@@ -20,13 +20,16 @@ class PostModal extends Component {
       user: "Madhav",
       username: "memadcoder",
       date: "Dec 5 2019",
-      likes: [{ userId: "" }],
-      unlikes: [{ userId: "" }],
-      highlight: [{ userId: "" }],
-      shares: [{ userId: "" }],
+      likes: [],
+      unlikes: [],
+      highlight: [],
+      shares: [],
       title: this.state.title,
       description: this.state.description,
     };
+
+    console.log("new post==>", newPost);
+
     this.setState({ posts: this.state.posts.posts.push(newPost) });
 
     alert("Post SuccessFul");
