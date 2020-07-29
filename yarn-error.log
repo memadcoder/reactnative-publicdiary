@@ -1,5 +1,5 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Users\madha\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add react-floating-button-menu
+  C:\Program Files\nodejs\node.exe C:\Users\madha\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add react-animation-components
 
 PATH: 
   C:\ProgramData\Anaconda3;C:\ProgramData\Anaconda3\Library\mingw-w64\bin;C:\ProgramData\Anaconda3\Library\usr\bin;C:\ProgramData\Anaconda3\Library\bin;C:\ProgramData\Anaconda3\Scripts;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\nodejs\;C:\Program Files\MongoDB\Server\4.2\bin;C:\Program Files\PuTTY\;C:\Program Files\Git\cmd;C:\Users\madha\AppData\Local\Programs\Python\Python38-32\Scripts\;C:\Users\madha\AppData\Local\Programs\Python\Python38-32\;C:\Users\madha\AppData\Local\Microsoft\WindowsApps;C:\Users\madha\AppData\Roaming\npm;C:\Users\madha\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\heroku\bin;C:\Program Files\OpenSSL-Win64\bin;
@@ -14,8 +14,7 @@ Platform:
   win32 x64
 
 Trace: 
-  Error: getaddrinfo EAI_AGAIN registry.yarnpkg.com
-      at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:64:26)
+  Error: EPERM: operation not permitted, unlink 'C:\Users\madha\Desktop\publicDiary\PublicDiary\node_modules\@babel\compat-data\node_modules\.bin'
 
 npm manifest: 
   {
@@ -36,20 +35,26 @@ npm manifest:
       "axios": "^0.19.2",
       "expo": "~38.0.8",
       "expo-constants": "^9.1.1",
+      "expo-linear-gradient": "~8.2.1",
       "expo-status-bar": "^1.0.2",
       "react": "~16.11.0",
       "react-dom": "~16.11.0",
       "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
+      "react-native-action-button": "^2.8.5",
+      "react-native-animatable": "^1.3.3",
       "react-native-elements": "^2.0.4",
       "react-native-floating-action": "^1.21.0",
       "react-native-floating-action-menu": "^1.1.9",
       "react-native-gesture-handler": "~1.6.0",
+      "react-native-linear-gradient": "^2.5.6",
+      "react-native-paper": "^4.0.1",
       "react-native-popup-menu": "^0.15.9",
       "react-native-reanimated": "~1.9.0",
       "react-native-router-flux": "^4.2.0",
       "react-native-safe-area-context": "~3.0.7",
       "react-native-screens": "^2.9.0",
       "react-native-simple-radio-button": "^2.7.4",
+      "react-native-vector-icons": "^7.0.0",
       "react-native-web": "~0.11.7",
       "react-redux": "^7.2.0",
       "redux": "^4.0.5",
@@ -1001,6 +1006,14 @@ Lockfile:
       "@babel/helper-validator-identifier" "^7.10.4"
       lodash "^4.17.19"
       to-fast-properties "^2.0.0"
+  
+  "@callstack/react-theme-provider@^3.0.5":
+    version "3.0.5"
+    resolved "https://registry.yarnpkg.com/@callstack/react-theme-provider/-/react-theme-provider-3.0.5.tgz#a173e455e9603c9c45357a3b6ace1273086527ca"
+    integrity sha512-Iec+ybWN0FvNj87sD3oWo/49edGUP0UOSdMnzCJEFJIDYr992ECIuOV89burAAh2/ibPCxgLiK6dmgv2mO/8Tg==
+    dependencies:
+      deepmerge "^3.2.0"
+      hoist-non-react-statics "^3.3.0"
   
   "@cnakazawa/watch@^1.0.3":
     version "1.0.4"
@@ -4885,6 +4898,20 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
     integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
   
+  react-native-action-button@^2.8.5:
+    version "2.8.5"
+    resolved "https://registry.yarnpkg.com/react-native-action-button/-/react-native-action-button-2.8.5.tgz#4152a50323a8a6b3468e6f161f9a9071f2f0739a"
+    integrity sha512-BvGZpzuGeuFR2Y6j93+vKiSqDhsF87VHvNXFs/qEYKfzT4b1ASAT/GQbgS6gNt4jRJCUnJWYrIwlBzRjesZQmQ==
+    dependencies:
+      prop-types "^15.5.10"
+  
+  react-native-animatable@^1.3.3:
+    version "1.3.3"
+    resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-1.3.3.tgz#a13a4af8258e3bb14d0a9d839917e9bb9274ec8a"
+    integrity sha512-2ckIxZQAsvWn25Ho+DK3d1mXIgj7tITkrS4pYDvx96WyOttSvzzFeQnM2od0+FUMzILbdHDsDEqZvnz1DYNQ1w==
+    dependencies:
+      prop-types "^15.7.2"
+  
   react-native-appearance@~0.3.3:
     version "0.3.4"
     resolved "https://registry.yarnpkg.com/react-native-appearance/-/react-native-appearance-0.3.4.tgz#2cbcbc5142cdc1898c116684f519b16c879cbec2"
@@ -4933,6 +4960,20 @@ Lockfile:
     version "1.2.1"
     resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.1.tgz#645e2ffbbb49e80844bb4cbbe34a126fda1e6772"
     integrity sha512-/VbpIEp8tSNNHIvstuA3Swx610whci1Zpc9mqNkqn14DkMbw+ORviln2u0XyHG1kPvvwTNGZY6QpeFwxYaSdbQ==
+  
+  react-native-linear-gradient@^2.5.6:
+    version "2.5.6"
+    resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.5.6.tgz#96215cbc5ec7a01247a20890888aa75b834d44a0"
+    integrity sha512-HDwEaXcQIuXXCV70O+bK1rizFong3wj+5Q/jSyifKFLg0VWF95xh8XQgfzXwtq0NggL9vNjPKXa016KuFu+VFg==
+  
+  react-native-paper@^4.0.1:
+    version "4.0.1"
+    resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-4.0.1.tgz#13d2272757fb738113582e900787f365cfa77c74"
+    integrity sha512-C1kHZ5sS3QU2XdmdHnLAzp88T+FWtkOa+43wYjBClevsDvi72aRf6H9PTs8GS69E8tlNHym3kbVcENgnDPMqhQ==
+    dependencies:
+      "@callstack/react-theme-provider" "^3.0.5"
+      color "^3.1.2"
+      react-native-safe-area-view "^0.14.9"
   
   react-native-popup-menu@^0.15.9:
     version "0.15.9"
@@ -5002,6 +5043,15 @@ Lockfile:
     version "2.15.0"
     resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-2.15.0.tgz#71b0c87f7cb2cde1d740f7130c17f213f2cbcaa0"
     integrity sha512-rCQPNp0N4t2IZHTVpdb/eddJ9kTLC8QlD/8Ce1+z2Fk3Evk0HPhuhTAW3mfa+thzRXkXYxxsS7QcIjJKs2Wu3w==
+  
+  react-native-vector-icons@^7.0.0:
+    version "7.0.0"
+    resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-7.0.0.tgz#5b92ed363c867645daad48c559e1f99efcfbb813"
+    integrity sha512-Ku8+dTUAnR9pexRPQqsUcQEZlxEpFZsIy8iOFqVL/3mrUyncZJHtqJyx2cUOmltZIC6W2GI4IkD3EYzPerXV5g==
+    dependencies:
+      lodash "^4.17.15"
+      prop-types "^15.7.2"
+      yargs "^15.0.2"
   
   react-native-web@~0.11.7:
     version "0.11.7"
@@ -6327,7 +6377,7 @@ Lockfile:
       y18n "^4.0.0"
       yargs-parser "^15.0.1"
   
-  yargs@^15.1.0:
+  yargs@^15.0.2, yargs@^15.1.0:
     version "15.4.1"
     resolved "https://registry.yarnpkg.com/yargs/-/yargs-15.4.1.tgz#0d87a16de01aee9d8bec2bfbf74f67851730f4f8"
     integrity sha512-aePbxDmcYW++PaqBsJ+HYUFwCdv4LVvdnhBy78E57PIor8/OVvhMrADFFEDh8DHDFRv/O9i3lPhsENjO7QX0+A==

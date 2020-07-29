@@ -19,6 +19,7 @@ import Highlight from "./HighlightComponent";
 import PostModal from "./PostModalComponent";
 import ReportModal from "./ReportModalComponent";
 import SignIn from "./SignInComponent";
+import SignUp from "./SignUpComponent";
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -33,7 +34,6 @@ function MyDrawer() {
       drawerType={dimensions.width >= 768 ? "permanent" : "front"}
       drawerStyle={{
         width: 240,
-        marginTop: Constants.statusBarHeight,
       }}
       initialRouteName="Home"
     >
@@ -77,6 +77,18 @@ function MyDrawer() {
       <Drawer.Screen
         name="SignIn"
         component={SignIn}
+        options={{
+          drawerIcon: (config) => (
+            <Icon
+              size={23}
+              name={Platform.OS === "android" ? "md-log-in" : "ios-log-in"}
+            ></Icon>
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name="SignUp"
+        component={SignUp}
         options={{
           drawerIcon: (config) => (
             <Icon

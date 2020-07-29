@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, FlatList } from "react-native";
 
 import { ListItem } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as Animatable from "react-native-animatable";
 
 import Icon from "react-native-vector-icons/FontAwesome";
 
@@ -36,9 +37,14 @@ class Home extends Component {
     await this.setState({
       posts: this.state.posts.posts.filter((post) => post.id !== pid),
     });
+
+    finalIntermediate = {
+      posts: intermediate,
+    };
+
     await this.setState({
       ...this.state.posts.posts,
-      intermediate,
+      final,
     });
     console.log("before push state", this.state.posts);
 
@@ -59,7 +65,11 @@ class Home extends Component {
 
     const RenderPost = ({ item, index }) => {
       return (
-        <View key={index} style={styles.postContainer}>
+        <Animatable.View
+          animation="slideInDown"
+          key={index}
+          style={styles.postContainer}
+        >
           <View
             style={{
               flex: 1,
@@ -181,7 +191,7 @@ class Home extends Component {
               </View>
             </View>
           </View>
-        </View>
+        </Animatable.View>
       );
     };
     return (

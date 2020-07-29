@@ -3,6 +3,7 @@ import { View, Text } from "react-native";
 import { Card, Button, Icon } from "react-native-elements";
 
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as Animatable from "react-native-animatable";
 
 class ContactUs extends Component {
   render() {
@@ -13,7 +14,7 @@ class ContactUs extends Component {
           flex: 1,
         }}
       >
-        <View style={{ margin: 10 }}>
+        <Animatable.View animation="flash" style={{ margin: 10 }}>
           <Card title="Contact Information" backgroundColor="black">
             <Text style={{ margin: 10 }}>121, Clear Water Bay Road</Text>
             <Text style={{ margin: 10 }}>Clear Water Bay, Kowloon</Text>
@@ -29,7 +30,7 @@ class ContactUs extends Component {
               }
             />
           </Card>
-        </View>
+        </Animatable.View>
       </SafeAreaView>
     );
   }

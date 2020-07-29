@@ -18,14 +18,17 @@ import Feather from "react-native-vector-icons/Feather";
 
 import { useTheme } from "react-native-paper";
 
-const SignInScreen = ({ navigation }) => {
+const SignUpScreen = ({ navigation }) => {
   const [data, setData] = React.useState({
     username: "",
     password: "",
+    confirmPassword: "",
     check_textInputChange: false,
     secureTextEntry: true,
+    confirmSecureTextEntry: true,
     isValidUser: true,
     isValidPassword: true,
+    isConfirmValidPassword: true,
   });
 
   const { colors } = useTheme();
@@ -66,10 +69,33 @@ const SignInScreen = ({ navigation }) => {
     }
   };
 
+  const handleConfirmPasswordChange = (val) => {
+    if (val.trim().length >= 8) {
+      setData({
+        ...data,
+        confirmPassword: val,
+        isConfirmValidPassword: true,
+      });
+    } else {
+      setData({
+        ...data,
+        confirmPassword: val,
+        isConfirmValidPassword: false,
+      });
+    }
+  };
+
   const updateSecureTextEntry = () => {
     setData({
       ...data,
       secureTextEntry: !data.secureTextEntry,
+    });
+  };
+
+  const updateConfirmSecureTextEntry = () => {
+    setData({
+      ...data,
+      confirmSecureTextEntry: !data.confirmSecureTextEntry,
     });
   };
 
@@ -86,28 +112,6 @@ const SignInScreen = ({ navigation }) => {
       });
     }
   };
-
-  // const loginHandle = (userName, password) => {
-
-  //     const foundUser = Users.filter( item => {
-  //         return userName == item.username && password == item.password;
-  //     } );
-
-  //     if ( data.username.length == 0 || data.password.length == 0 ) {
-  //         Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
-  //             {text: 'Okay'}
-  //         ]);
-  //         return;
-  //     }
-
-  //     if ( foundUser.length == 0 ) {
-  //         Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-  //             {text: 'Okay'}
-  //         ]);
-  //         return;
-  //     }
-  //     signIn(foundUser);
-  // }
 
   return (
     <View style={styles.container}>
@@ -202,6 +206,48 @@ const SignInScreen = ({ navigation }) => {
           </Animatable.View>
         )}
 
+        <Text
+          style={[
+            styles.text_footer,
+            {
+              color: "black",
+              marginTop: 35,
+            },
+          ]}
+        >
+          Confirm Password
+        </Text>
+        <View style={styles.action}>
+          <Feather name="lock" color={colors.text} size={20} />
+          <TextInput
+            placeholder="Confirm Password"
+            placeholderTextColor="#666666"
+            confirmSecureTextEntry={data.confirmSecureTextEntry ? true : false}
+            style={[
+              styles.textInput,
+              {
+                color: "black",
+              },
+            ]}
+            autoCapitalize="none"
+            onChangeText={(val) => handleConfirmPasswordChange(val)}
+          />
+          <TouchableOpacity onPress={updateConfirmSecureTextEntry}>
+            {data.confirmSecureTextEntry ? (
+              <Feather name="eye-off" color="grey" size={20} />
+            ) : (
+              <Feather name="eye" color="grey" size={20} />
+            )}
+          </TouchableOpacity>
+        </View>
+        {data.isConfirmValidPassword ? null : (
+          <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={styles.errorMsg}>
+              Password must be 8 characters long.
+            </Text>
+          </Animatable.View>
+        )}
+
         <TouchableOpacity>
           <Text style={{ color: "black", marginTop: 15 }}>
             Forgot password?
@@ -223,7 +269,7 @@ const SignInScreen = ({ navigation }) => {
                   },
                 ]}
               >
-                Sign In
+                Sign Up
               </Text>
             </LinearGradient>
           </TouchableOpacity>
@@ -247,7 +293,7 @@ const SignInScreen = ({ navigation }) => {
                 },
               ]}
             >
-              Sign Up
+              Sign In
             </Text>
           </TouchableOpacity>
         </View>
@@ -256,7 +302,7 @@ const SignInScreen = ({ navigation }) => {
   );
 };
 
-export default SignInScreen;
+export default SignUpScreen;
 
 const styles = StyleSheet.create({
   container: {

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, FlatList } from "react-native";
 
 import { ListItem } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as Animatable from "react-native-animatable";
 
 import Icon from "react-native-vector-icons/FontAwesome";
 
@@ -29,7 +30,11 @@ class Highlight extends Component {
 
     const RenderHighlight = ({ item, index }) => {
       return (
-        <View key={index} style={styles.postContainer}>
+        <Animatable.View
+          animation="slideInDown"
+          key={index}
+          style={styles.postContainer}
+        >
           <View
             style={{
               flex: 1,
@@ -140,7 +145,7 @@ class Highlight extends Component {
               </View>
             </View>
           </View>
-        </View>
+        </Animatable.View>
       );
     };
 

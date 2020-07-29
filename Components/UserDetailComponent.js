@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, FlatList } from "react-native";
 
 import { ListItem } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as Animatable from "react-native-animatable";
 
 import Icon from "react-native-vector-icons/FontAwesome";
 
@@ -29,7 +30,7 @@ class UserDetail extends Component {
     console.log("userId=>", id);
     const RenderDish = ({ item, index }) => {
       return (
-        <View style={styles.postContainer}>
+        <Animatable.View animation="slideInDown" style={styles.postContainer}>
           <View
             style={{
               flex: 1,
@@ -140,7 +141,7 @@ class UserDetail extends Component {
               </View>
             </View>
           </View>
-        </View>
+        </Animatable.View>
       );
     };
     return (
