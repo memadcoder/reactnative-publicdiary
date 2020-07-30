@@ -23,37 +23,20 @@ class Home extends Component {
     console.log("initial", this.state.posts);
   }
 
-  componentDidUpdate() {
-    //console.log("updated", this.state.posts.posts);
-  }
-
   async handleHighligted(pid) {
     const postState = this.state.posts.posts;
     const post = postState.filter((post) => post.id === pid);
-    const intermediate = this.state.posts.posts.filter(
-      (post) => post.id !== pid
-    );
-    console.log("intermediate state=====>", intermediate);
-    await this.setState({
-      posts: this.state.posts.posts.filter((post) => post.id !== pid),
-    });
 
-    finalIntermediate = {
-      posts: intermediate,
-    };
+    post[0].highlight.indexOf(this.state.loggedInId) === -1
+      ? post[0].highlight.push(this.state.loggedInId)
+      : post[0].highlight.pop(this.state.loggedInId);
 
-    await this.setState({
-      ...this.state.posts.posts,
-      final,
-    });
-    console.log("before push state", this.state.posts);
-
-    post[0].highlight.push(this.state.loggedInId);
+    // post[0].highlight.push(this.state.loggedInId);
 
     const toPost = post[0];
-    console.log("object to push======>", toPost);
-    await this.setState({ posts: this.state.posts.posts.push(toPost) });
-    console.log("current state", this.state.posts);
+    // console.log("object to push======>", toPost);
+    await this.setState({ ...this.state.posts.posts, toPost });
+    // console.log("current state", this.state.posts);
   }
 
   handleLiked() {}

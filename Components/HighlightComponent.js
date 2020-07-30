@@ -20,13 +20,18 @@ class Highlight extends Component {
   }
 
   render() {
-    // const { route } = props;
-    // const { item } = route.params;
-
-    const ans = this.state.posts.posts.filter(
-      (result) => result.highlight == this.state.loggedInId
-    );
-    console.log("ans=>", ans);
+    const ans = [];
+    const posts = this.state.posts.posts;
+    console.log(posts);
+    for (var i = 0; i < posts.length; i++) {
+      for (var j = 0; j < posts[i].highlight.length; j++) {
+        console.log(posts[i].highlight[j]);
+        if (posts[i].highlight[j] != null) {
+          ans.push(posts[i]);
+        }
+      }
+      // console.log(posts[i].highlight);
+    }
 
     const RenderHighlight = ({ item, index }) => {
       return (
