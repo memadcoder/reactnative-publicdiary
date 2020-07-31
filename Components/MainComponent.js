@@ -31,7 +31,6 @@ function MyDrawer() {
   return (
     <Drawer.Navigator
       drawerType="permanent"
-      drawerType="permanent"
       drawerType={dimensions.width >= 768 ? "permanent" : "front"}
       drawerStyle={{
         width: 240,

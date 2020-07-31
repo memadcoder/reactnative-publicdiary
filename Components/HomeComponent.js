@@ -39,9 +39,29 @@ class Home extends Component {
     // console.log("current state", this.state.posts);
   }
 
-  handleLiked() {}
+  async handleLiked(pid) {
+    const postState = this.state.posts.posts;
+    const post = postState.filter((post) => post.id === pid);
 
-  handleUnliked() {}
+    post[0].likes.indexOf(this.state.loggedInId) === -1
+      ? post[0].likes.push(this.state.loggedInId)
+      : post[0].likes.pop(this.state.loggedInId);
+
+    const toPost = post[0];
+    await this.setState({ ...this.state.posts.posts, toPost });
+  }
+
+  async handleUnliked(pid) {
+    const postState = this.state.posts.posts;
+    const post = postState.filter((post) => post.id === pid);
+
+    post[0].unlikes.indexOf(this.state.loggedInId) === -1
+      ? post[0].unlikes.push(this.state.loggedInId)
+      : post[0].unlikes.pop(this.state.loggedInId);
+
+    const toPost = post[0];
+    await this.setState({ ...this.state.posts.posts, toPost });
+  }
 
   render() {
     const { navigation } = this.props;
@@ -133,9 +153,7 @@ class Home extends Component {
                   type="font-awesome"
                   size={32}
                   color=""
-                  // onPress={() =>
-                  //   this.setState({ like: !this.state.like, unlike: false })
-                  // }
+                  onPress={() => this.handleLiked(item.id)}
                 />
                 <Text>Likes</Text>
                 <Text>{item.likes.length}</Text>
@@ -152,9 +170,7 @@ class Home extends Component {
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() =>
-                    this.setState({ unlike: !this.state.unlike, like: false })
-                  }
+                  onPress={() => this.handleUnliked(item.id)}
                 />
                 <Text>Unlikes</Text>
                 <Text>{item.unlikes.length}</Text>
