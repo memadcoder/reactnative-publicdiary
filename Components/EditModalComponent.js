@@ -1,178 +1,287 @@
-import React, { useState, Component } from "react";
-import { View, Button, Modal, StyleSheet, Text } from "react-native";
+import React, { Component } from "react";
+import {
+  StyleSheet,
+  View,
+  Modal,
+  TextInput,
+  Text,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
+import POSTS from "../shared/posts";
+import * as Animatable from "react-native-animatable";
+
+import { LinearGradient } from "expo-linear-gradient";
+
+import Feather from "react-native-vector-icons/Feather";
+
+import moment from "moment";
 
 class EditModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: true,
-      count: "1",
+      posts: POSTS,
+      title: "",
+      description: "",
+      check_titleInputChange: false,
+      check_descriptionInputChange: false,
+      isValidTitle: true,
+      isValidDescription: true,
+      validPost: false,
     };
   }
 
+  // colors = useTheme();
+  loggedInUserDetails = {
+    userId: 1,
+    user: "Madhav",
+    username: "memadcoder",
+  };
+
   componentDidMount() {
-    this.setState({ modalVisible: true });
+    console.log("title", this.props.route.params.titleValue);
+    this.setState({
+      ...this.state,
+      title: this.props.route.params.titleValue,
+      description: this.props.route.params.descriptionValue,
+    });
   }
 
+  async handleSubmit(pId, navigation) {
+    if (this.state.isValidTitle && this.state.isValidDescription) {
+      var date = moment().utcOffset("+05:30").format(" Y-MMM-DD hh:mm a");
+      var title = this.state.title;
+      var description = this.state.description;
+
+      const postState = this.state.posts.posts;
+      const post = postState.filter((post) => post.id === pId);
+
+      post[0].title = title;
+      post[0].description = description;
+      post[0].date = date;
+
+      const toPost = post[0];
+      await this.setState({ ...this.state.posts.posts, toPost });
+
+      alert("Update SuccessFul");
+      navigation.navigate("Home");
+    } else {
+      alert("Update Failed");
+    }
+  }
+
+  titleInputChange = (val) => {
+    if (val.trim().length >= 4) {
+      this.setState({
+        ...this.state,
+        title: val,
+        check_titleInputChange: true,
+        isValidTitle: true,
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        title: val,
+        check_titleInputChange: false,
+        isValidTitle: false,
+      });
+    }
+  };
+
+  descriptionInputChange = (val) => {
+    if (val.trim().length >= 10) {
+      this.setState({
+        ...this.state,
+        description: val,
+        check_descriptionInputChange: true,
+        isValidDescription: true,
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        description: val,
+        check_descriptionInputChange: false,
+        isValidDescription: false,
+      });
+    }
+  };
+
   render() {
-    const { navigation, option, pId, userId } = this.props;
+    const { navigation } = this.props;
+    const {
+      pId,
+      selected,
+      userId,
+      titleValue,
+      descriptionValue,
+    } = this.props.route.params;
 
-    return (
-      <View>
-        <Text>{navigation}</Text>
-        <Text>{option}</Text>
-        <Text>{pId}</Text>
-        <Text>{userId}</Text>
-      </View>
-      //   <Modal
-      //     animationType={"slide"}
-      //     transparent={false}
-      //     visible={this.modalVisible}
-      //     onDismiss={false}
-      //     onRequestClose={false}
-      //   >
-      //     <Animatable.View
-      //       animation="fadeInUpBig"
-      //       style={[
-      //         styles.footer,
-      //         {
-      //           backgroundColor: "white",
-      //         },
-      //       ]}
-      //     >
-      //       <Text
-      //         style={[
-      //           styles.text_footer,
-      //           {
-      //             color: "black",
-      //           },
-      //         ]}
-      //       >
-      //         Username
-      //       </Text>
-      //       <View style={styles.action}>
-      //         <FontAwesome name="user-o" color={colors.text} size={20} />
-      //         <TextInput
-      //           placeholder="Your Username"
-      //           placeholderTextColor="#666666"
-      //           style={[
-      //             styles.textInput,
-      //             {
-      //               color: "black",
-      //             },
-      //           ]}
-      //           autoCapitalize="none"
-      //           onChangeText={(val) => textInputChange(val)}
-      //           onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
-      //         />
-      //         {data.check_textInputChange ? (
-      //           <Animatable.View animation="bounceIn">
-      //             <Feather name="check-circle" color="green" size={20} />
-      //           </Animatable.View>
-      //         ) : null}
-      //       </View>
-      //       {data.isValidUser ? null : (
-      //         <Animatable.View animation="fadeInLeft" duration={500}>
-      //           <Text style={styles.errorMsg}>
-      //             Username must be 4 characters long.
-      //           </Text>
-      //         </Animatable.View>
-      //       )}
+    if (selected === 1) {
+      return (
+        <View style={{ backgroundColor: "white", margin: 10, padding: 10 }}>
+          <Modal
+            animationType={"slide"}
+            transparent={false}
+            visible={this.modalVisible}
+            onDismiss={false}
+            onRequestClose={false}
+          >
+            <View style={styles.container}>
+              <Animatable.View
+                animation="fadeInUpBig"
+                style={[
+                  styles.footer,
+                  {
+                    backgroundColor: "white",
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.text_footer,
+                    {
+                      color: "black",
+                    },
+                  ]}
+                >
+                  Title
+                </Text>
+                <View style={styles.action}>
+                  <TextInput
+                    multiline={true}
+                    numberOfLines={5}
+                    placeholder="Post Title"
+                    placeholderTextColor="#666666"
+                    style={[
+                      styles.textInput,
+                      {
+                        color: "black",
+                      },
+                    ]}
+                    autoCapitalize="none"
+                    onChangeText={(val) => this.titleInputChange(val)}
+                    value={this.state.title}
 
-      //       <Text
-      //         style={[
-      //           styles.text_footer,
-      //           {
-      //             color: "black",
-      //             marginTop: 35,
-      //           },
-      //         ]}
-      //       >
-      //         Password
-      //       </Text>
-      //       <View style={styles.action}>
-      //         <Feather name="lock" color={colors.text} size={20} />
-      //         <TextInput
-      //           placeholder="Your Password"
-      //           placeholderTextColor="#666666"
-      //           secureTextEntry={data.secureTextEntry ? true : false}
-      //           style={[
-      //             styles.textInput,
-      //             {
-      //               color: "black",
-      //             },
-      //           ]}
-      //           autoCapitalize="none"
-      //           onChangeText={(val) => handlePasswordChange(val)}
-      //         />
-      //         <TouchableOpacity onPress={updateSecureTextEntry}>
-      //           {data.secureTextEntry ? (
-      //             <Feather name="eye-off" color="grey" size={20} />
-      //           ) : (
-      //             <Feather name="eye" color="grey" size={20} />
-      //           )}
-      //         </TouchableOpacity>
-      //       </View>
-      //       {data.isValidPassword ? null : (
-      //         <Animatable.View animation="fadeInLeft" duration={500}>
-      //           <Text style={styles.errorMsg}>
-      //             Password must be 8 characters long.
-      //           </Text>
-      //         </Animatable.View>
-      //       )}
+                    // onChangeText={(text) => this.setState({ title: text })}
+                  />
+                  {this.state.check_titleInputChange ? (
+                    <Animatable.View animation="bounceIn">
+                      <Feather name="check-circle" color="green" size={20} />
+                    </Animatable.View>
+                  ) : null}
+                </View>
+                {this.state.isValidTitle ? null : (
+                  <Animatable.View animation="fadeInLeft" duration={500}>
+                    <Text style={styles.errorMsg}>Title is Required.</Text>
+                    <Text style={styles.errorMsg}>
+                      Title must me more than 4 character.
+                    </Text>
+                  </Animatable.View>
+                )}
 
-      //       <TouchableOpacity>
-      //         <Text style={{ color: "black", marginTop: 15 }}>
-      //           Forgot password?
-      //         </Text>
-      //       </TouchableOpacity>
-      //       <View style={styles.button}>
-      //         <TouchableOpacity
-      //           style={styles.signIn}
-      //           // onPress={() => {
-      //           //   loginHandle(data.username, data.password);
-      //           // }}
-      //         >
-      //           <LinearGradient colors={["black", "white"]} style={styles.signIn}>
-      //             <Text
-      //               style={[
-      //                 styles.textSign,
-      //                 {
-      //                   color: "#fff",
-      //                 },
-      //               ]}
-      //             >
-      //               Sign In
-      //             </Text>
-      //           </LinearGradient>
-      //         </TouchableOpacity>
+                <Text
+                  style={[
+                    styles.text_footer,
+                    {
+                      color: "black",
+                    },
+                  ]}
+                >
+                  Description
+                </Text>
+                <View style={styles.action}>
+                  <TextInput
+                    multiline={true}
+                    numberOfLines={8}
+                    placeholder="Post Description"
+                    placeholderTextColor="#666666"
+                    autoCapitalize="none"
+                    style={[
+                      styles.textInput,
+                      {
+                        color: "black",
+                      },
+                    ]}
+                    onChangeText={(val) => this.descriptionInputChange(val)}
+                    // onChangeText={(text) => this.setState({ description: text })}
+                    value={this.state.description}
+                  />
+                  {this.state.check_descriptionInputChange ? (
+                    <Animatable.View animation="bounceIn">
+                      <Feather name="check-circle" color="green" size={20} />
+                    </Animatable.View>
+                  ) : null}
+                </View>
+                {this.state.isValidDescription ? null : (
+                  <Animatable.View animation="fadeInLeft" duration={500}>
+                    <Text style={styles.errorMsg}>
+                      Description is Required.
+                    </Text>
+                    <Text style={styles.errorMsg}>
+                      Description must me more than 20 character.
+                    </Text>
+                  </Animatable.View>
+                )}
 
-      //         <TouchableOpacity
-      //           // onPress={() => navigation.navigate("SignUpScreen")}
-      //           style={[
-      //             styles.signIn,
-      //             {
-      //               borderColor: "black",
-      //               borderWidth: 1,
-      //               marginTop: 15,
-      //             },
-      //           ]}
-      //         >
-      //           <Text
-      //             style={[
-      //               styles.textSign,
-      //               {
-      //                 color: "black",
-      //               },
-      //             ]}
-      //           >
-      //             Sign Up
-      //           </Text>
-      //         </TouchableOpacity>
-      //       </View>
-      //     </Animatable.View>
-      //   </Modal>
-    );
+                <View style={styles.button}>
+                  <TouchableOpacity
+                    style={styles.signIn}
+                    onPress={() => this.handleSubmit(pId, navigation)}
+                  >
+                    <LinearGradient
+                      colors={["black", "white"]}
+                      style={styles.signIn}
+                    >
+                      <Text
+                        style={[
+                          styles.textSign,
+                          {
+                            color: "#fff",
+                          },
+                        ]}
+                      >
+                        Post
+                      </Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Home")}
+                    style={[
+                      styles.signIn,
+                      {
+                        borderColor: "black",
+                        borderWidth: 1,
+                        marginTop: 15,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.textSign,
+                        {
+                          color: "black",
+                        },
+                      ]}
+                    >
+                      Cancel
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </Animatable.View>
+            </View>
+          </Modal>
+        </View>
+      );
+    } else {
+      return (
+        <View>
+          <Text>Delete</Text>
+        </View>
+      );
+    }
   }
 }
 

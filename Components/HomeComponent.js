@@ -1,17 +1,22 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 
-import { ListItem } from "react-native-elements";
+import { ListItem, Icon } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Animatable from "react-native-animatable";
 
-import Icon from "react-native-vector-icons/FontAwesome";
-
-import ReportOptions from "./ReportOptionsComponent";
-import EditOptions from "./PostEditDeleteComponent";
+import Icons from "react-native-vector-icons/FontAwesome";
 
 import POSTS from "../shared/posts.js";
 import FloatMenu from "./FloatingMenu";
+
+import {
+  Menu,
+  MenuProvider,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from "react-native-popup-menu";
 
 class Home extends Component {
   constructor(props) {
@@ -107,9 +112,66 @@ class Home extends Component {
               }}
             >
               {item.userId === this.state.loggedInId ? (
-                <EditOptions navigation={navigation} postId={item.id} />
+                <MenuProvider>
+                  <Menu
+                    onSelect={(value) =>
+                      navigation.navigate("EditModal", {
+                        navigation: navigation,
+                        selected: value,
+                        pId: item.id,
+                        userId: this.state.loggedInId,
+                        titleValue: item.title,
+                        descriptionValue: item.description,
+                      })
+                    }
+                  >
+                    <MenuTrigger>
+                      <Icon
+                        name={"dots-three-vertical"}
+                        type={"entypo"}
+                        size={20}
+                        color="black"
+                      />
+                    </MenuTrigger>
+                    <MenuOptions>
+                      {/* <MenuOption value={1} text="report" /> */}
+                      <MenuOption value={1}>
+                        <Text style={{ margin: -5 }}>Edit Entry</Text>
+                      </MenuOption>
+                      <MenuOption value={2}>
+                        <Text style={{ margin: -5 }}>Delete Entry</Text>
+                      </MenuOption>
+                    </MenuOptions>
+                  </Menu>
+                </MenuProvider>
               ) : (
-                <ReportOptions navigation={navigation} postId={item.id} />
+                <MenuProvider>
+                  <Menu
+                    onSelect={(value) =>
+                      navigation.navigate("EditModal", {
+                        navigation: navigation,
+                        selected: value,
+                        pId: item.id,
+                        userId: this.state.loggedInId,
+                      })
+                    }
+                  >
+                    <MenuTrigger>
+                      <Icon
+                        name={"dots-three-vertical"}
+                        type={"entypo"}
+                        size={20}
+                        color="black"
+                      />
+                    </MenuTrigger>
+                    <MenuOptions>
+                      {/* <MenuOption value={1} text="report" /> */}
+                      <MenuOption value={1}>
+                        <Text style={{ margin: -5 }}>Report Entry</Text>
+                      </MenuOption>
+                    </MenuOptions>
+                  </Menu>
+                </MenuProvider>
               )}
             </View>
           </View>
@@ -128,7 +190,7 @@ class Home extends Component {
           <View style={styles.reactionContainer}>
             <View style={styles.reactions}>
               <View style={styles.icons}>
-                <Icon
+                <Icons
                   raised
                   reverse
                   name={
@@ -145,7 +207,7 @@ class Home extends Component {
                 <Text>{item.highlight.length}</Text>
               </View>
               <View style={styles.icons}>
-                <Icon
+                <Icons
                   raised
                   reverse
                   name={
@@ -162,7 +224,7 @@ class Home extends Component {
                 <Text>{item.likes.length}</Text>
               </View>
               <View style={styles.icons}>
-                <Icon
+                <Icons
                   raised
                   reverse
                   name={
@@ -179,7 +241,7 @@ class Home extends Component {
                 <Text>{item.unlikes.length}</Text>
               </View>
               <View style={styles.icons}>
-                <Icon
+                <Icons
                   raised
                   reverse
                   name="share"

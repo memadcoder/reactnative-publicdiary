@@ -1,13 +1,20 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 
-import { ListItem } from "react-native-elements";
+import { ListItem, Icon } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Animatable from "react-native-animatable";
 
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icons from "react-native-vector-icons/FontAwesome";
 
-import ReportOptions from "./ReportOptionsComponent";
+import {
+  Menu,
+  MenuProvider,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from "react-native-popup-menu";
+
 import POSTS from "../shared/posts";
 
 class Highlight extends Component {
@@ -63,7 +70,66 @@ class Highlight extends Component {
                 alignContent: "flex-start",
               }}
             >
-              <ReportOptions />
+              {item.userId === this.state.loggedInId ? (
+                <MenuProvider>
+                  <Menu
+                    onSelect={(value) =>
+                      navigation.navigate("EditModal", {
+                        navigation: navigation,
+                        selected: value,
+                        pId: postId,
+                        userId: loggedInId,
+                      })
+                    }
+                  >
+                    <MenuTrigger>
+                      <Icon
+                        name={"dots-three-vertical"}
+                        type={"entypo"}
+                        size={20}
+                        color="black"
+                      />
+                    </MenuTrigger>
+                    <MenuOptions>
+                      {/* <MenuOption value={1} text="report" /> */}
+                      <MenuOption value={1}>
+                        <Text style={{ margin: -5 }}>Edit Entry</Text>
+                      </MenuOption>
+                      <MenuOption value={2}>
+                        <Text style={{ margin: -5 }}>Delete Entry</Text>
+                      </MenuOption>
+                    </MenuOptions>
+                  </Menu>
+                </MenuProvider>
+              ) : (
+                <MenuProvider>
+                  <Menu
+                    onSelect={(value) =>
+                      navigation.navigate("EditModal", {
+                        navigation: navigation,
+                        selected: value,
+                        pId: postId,
+                        userId: loggedInId,
+                      })
+                    }
+                  >
+                    <MenuTrigger>
+                      <Icon
+                        name={"dots-three-vertical"}
+                        type={"entypo"}
+                        size={20}
+                        color="black"
+                      />
+                    </MenuTrigger>
+                    <MenuOptions>
+                      {/* <MenuOption value={1} text="report" /> */}
+                      <MenuOption value={1}>
+                        <Text style={{ margin: -5 }}>Report Entry</Text>
+                      </MenuOption>
+                    </MenuOptions>
+                  </Menu>
+                </MenuProvider>
+              )}
             </View>
           </View>
           <View style={styles.postContainer}>
@@ -81,7 +147,7 @@ class Highlight extends Component {
           <View style={styles.reactionContainer}>
             <View style={styles.reactions}>
               <View style={styles.icons}>
-                <Icon
+                <Icons
                   raised
                   reverse
                   name={
@@ -98,7 +164,7 @@ class Highlight extends Component {
                 <Text>{item.highlight.length}</Text>
               </View>
               <View style={styles.icons}>
-                <Icon
+                <Icons
                   raised
                   reverse
                   name={
@@ -117,7 +183,7 @@ class Highlight extends Component {
                 <Text>{item.likes.length}</Text>
               </View>
               <View style={styles.icons}>
-                <Icon
+                <Icons
                   raised
                   reverse
                   name={
@@ -136,7 +202,7 @@ class Highlight extends Component {
                 <Text>{item.unlikes.length}</Text>
               </View>
               <View style={styles.icons}>
-                <Icon
+                <Icons
                   raised
                   reverse
                   name="share"
