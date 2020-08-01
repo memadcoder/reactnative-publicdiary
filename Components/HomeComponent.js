@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, FlatList, Alert } from "react-native";
+import { View, Text, StyleSheet, FlatList, Alert, Share } from "react-native";
 
 import { ListItem, Icon } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -69,6 +69,33 @@ class Home extends Component {
 
     const toPost = post[0];
     await this.setState({ ...this.state.posts.posts, toPost });
+  }
+
+  async handleShare(title, description) {
+    console.log(title, description);
+    try {
+      const result = await Share.share(
+        {
+          title: title,
+          message: title + ":\n " + description + " ",
+          url: "www.google.com",
+        },
+        {
+          dialogTitle: "Share " + title,
+        }
+      );
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
   }
 
   handleDelete(pid) {
@@ -278,7 +305,7 @@ class Home extends Component {
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() => alert("share")}
+                  onPress={() => this.handleShare(item.title, item.description)}
                 />
                 <Text>Share</Text>
                 <Text>{item.shares.length}</Text>
