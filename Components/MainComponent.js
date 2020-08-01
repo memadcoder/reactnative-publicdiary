@@ -19,6 +19,7 @@ import ThreeDotMenu from "./DotMenuComponent";
 import Highlight from "./HighlightComponent";
 import PostModal from "./PostModalComponent";
 import ReportModal from "./ReportModalComponent";
+import EditModal from "./EditModalComponent";
 import SignIn from "./SignInComponent";
 import SignUp from "./SignUpComponent";
 
@@ -128,6 +129,13 @@ export default function Main() {
           component={ReportModal}
           options={() => ({
             title: "Report",
+          })}
+        />
+        <Stack.Screen
+          name="EditModal"
+          component={EditModal}
+          options={() => ({
+            title: "Edit",
           })}
         />
       </Stack.Navigator>

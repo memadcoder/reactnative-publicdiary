@@ -15,7 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 import Feather from "react-native-vector-icons/Feather";
 
-// var uuid = require("react-native-uuid");
+import moment from "moment";
 
 class PostModal extends Component {
   constructor(props) {
@@ -41,14 +41,14 @@ class PostModal extends Component {
   };
 
   handleSubmit(navigation) {
-    // var id = uuid.v1();
+    var date = moment().utcOffset("+05:30").format(" Y-MMM-DD hh:mm a");
     if (this.state.isValidTitle && this.state.isValidDescription) {
       const newPost = {
-        id: id,
+        id: date,
         userId: this.loggedInUserDetails.userId,
         user: this.loggedInUserDetails.user,
         username: this.loggedInUserDetails.username,
-        date: "Dec 5 2019",
+        date: date,
         likes: [],
         unlikes: [],
         highlight: [],

@@ -8,6 +8,8 @@ import * as Animatable from "react-native-animatable";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import ReportOptions from "./ReportOptionsComponent";
+import EditOptions from "./PostEditDeleteComponent";
+
 import POSTS from "../shared/posts.js";
 import FloatMenu from "./FloatingMenu";
 
@@ -104,10 +106,11 @@ class Home extends Component {
                 alignContent: "flex-start",
               }}
             >
-              <ReportOptions
-                loggedInId={this.state.loggedInId}
-                navigation={navigation}
-              />
+              {item.userId === this.state.loggedInId ? (
+                <EditOptions navigation={navigation} postId={item.id} />
+              ) : (
+                <ReportOptions navigation={navigation} postId={item.id} />
+              )}
             </View>
           </View>
           <View style={styles.postContainer}>
