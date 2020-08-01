@@ -1,11 +1,20 @@
 import React, { Component } from "react";
-import { View, Text } from "react-native";
+import { Text } from "react-native";
 import { Card, Button, Icon } from "react-native-elements";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Animatable from "react-native-animatable";
+import * as MailComposer from "expo-mail-composer";
 
 class ContactUs extends Component {
+  sendMail() {
+    MailComposer.composeAsync({
+      recipients: ["hola@gautammadhav.com.np"],
+      subject: "Enquiry",
+      body: "To whom it may concern:",
+    });
+  }
+
   render() {
     return (
       <SafeAreaView
@@ -25,6 +34,7 @@ class ContactUs extends Component {
             <Button
               title="Send Email"
               buttonStyle={{ backgroundColor: "black" }}
+              onPress={() => this.sendMail()}
               icon={
                 <Icon name="envelope-o" type="font-awesome" color="white" />
               }
