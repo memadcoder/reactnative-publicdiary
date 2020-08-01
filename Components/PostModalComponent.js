@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   Platform,
+  Alert,
 } from "react-native";
 import POSTS from "../shared/posts";
 import * as Animatable from "react-native-animatable";
@@ -61,15 +62,30 @@ class PostModal extends Component {
 
       this.setState({ posts: this.state.posts.posts.push(newPost) });
 
-      alert("Post SuccessFul");
-      navigation.navigate("Home");
+      Alert.alert(
+        "Post Message",
+        "Post Successful !",
+        [
+          {
+            text: "Ok",
+            onPress: () => navigation.navigate("Home"),
+          },
+        ],
+        { cancelable: false }
+      );
     } else {
-      alert("Post Failed");
+      Alert.alert(
+        "Post Message",
+        "Post Failed",
+        [
+          {
+            text: "Ok",
+            onPress: () => navigation.navigate("Home"),
+          },
+        ],
+        { cancelable: false }
+      );
     }
-  }
-
-  componentDidMount() {
-    this.setState({ modalVisible: true });
   }
 
   titleInputChange = (val) => {

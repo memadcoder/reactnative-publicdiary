@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   Platform,
+  Alert,
 } from "react-native";
 import POSTS from "../shared/posts";
 import * as Animatable from "react-native-animatable";
@@ -65,10 +66,29 @@ class EditModal extends Component {
       const toPost = post[0];
       await this.setState({ ...this.state.posts.posts, toPost });
 
-      alert("Update SuccessFul");
-      navigation.navigate("Home");
+      Alert.alert(
+        "Update Message",
+        "Update Successful !",
+        [
+          {
+            text: "Ok",
+            onPress: () => navigation.navigate("Home"),
+          },
+        ],
+        { cancelable: false }
+      );
     } else {
-      alert("Update Failed");
+      Alert.alert(
+        "Update Message",
+        "Update Failed",
+        [
+          {
+            text: "Ok",
+            onPress: () => navigation.navigate("Home"),
+          },
+        ],
+        { cancelable: false }
+      );
     }
   }
 
@@ -118,170 +138,160 @@ class EditModal extends Component {
       descriptionValue,
     } = this.props.route.params;
 
-    if (selected === 1) {
-      return (
-        <View style={{ backgroundColor: "white", margin: 10, padding: 10 }}>
-          <Modal
-            animationType={"slide"}
-            transparent={false}
-            visible={this.modalVisible}
-            onDismiss={false}
-            onRequestClose={false}
-          >
-            <View style={styles.container}>
-              <Animatable.View
-                animation="fadeInUpBig"
+    return (
+      <View style={{ backgroundColor: "white", margin: 10, padding: 10 }}>
+        <Modal
+          animationType={"slide"}
+          transparent={false}
+          visible={this.modalVisible}
+          onDismiss={false}
+          onRequestClose={false}
+        >
+          <View style={styles.container}>
+            <Animatable.View
+              animation="fadeInUpBig"
+              style={[
+                styles.footer,
+                {
+                  backgroundColor: "white",
+                },
+              ]}
+            >
+              <Text
                 style={[
-                  styles.footer,
+                  styles.text_footer,
                   {
-                    backgroundColor: "white",
+                    color: "black",
                   },
                 ]}
               >
-                <Text
+                Title
+              </Text>
+              <View style={styles.action}>
+                <TextInput
+                  multiline={true}
+                  numberOfLines={5}
+                  placeholder="Post Title"
+                  placeholderTextColor="#666666"
                   style={[
-                    styles.text_footer,
+                    styles.textInput,
                     {
                       color: "black",
                     },
                   ]}
-                >
-                  Title
-                </Text>
-                <View style={styles.action}>
-                  <TextInput
-                    multiline={true}
-                    numberOfLines={5}
-                    placeholder="Post Title"
-                    placeholderTextColor="#666666"
-                    style={[
-                      styles.textInput,
-                      {
-                        color: "black",
-                      },
-                    ]}
-                    autoCapitalize="none"
-                    onChangeText={(val) => this.titleInputChange(val)}
-                    value={this.state.title}
+                  autoCapitalize="none"
+                  onChangeText={(val) => this.titleInputChange(val)}
+                  value={this.state.title}
 
-                    // onChangeText={(text) => this.setState({ title: text })}
-                  />
-                  {this.state.check_titleInputChange ? (
-                    <Animatable.View animation="bounceIn">
-                      <Feather name="check-circle" color="green" size={20} />
-                    </Animatable.View>
-                  ) : null}
-                </View>
-                {this.state.isValidTitle ? null : (
-                  <Animatable.View animation="fadeInLeft" duration={500}>
-                    <Text style={styles.errorMsg}>Title is Required.</Text>
-                    <Text style={styles.errorMsg}>
-                      Title must me more than 4 character.
-                    </Text>
+                  // onChangeText={(text) => this.setState({ title: text })}
+                />
+                {this.state.check_titleInputChange ? (
+                  <Animatable.View animation="bounceIn">
+                    <Feather name="check-circle" color="green" size={20} />
                   </Animatable.View>
-                )}
+                ) : null}
+              </View>
+              {this.state.isValidTitle ? null : (
+                <Animatable.View animation="fadeInLeft" duration={500}>
+                  <Text style={styles.errorMsg}>Title is Required.</Text>
+                  <Text style={styles.errorMsg}>
+                    Title must me more than 4 character.
+                  </Text>
+                </Animatable.View>
+              )}
 
-                <Text
+              <Text
+                style={[
+                  styles.text_footer,
+                  {
+                    color: "black",
+                  },
+                ]}
+              >
+                Description
+              </Text>
+              <View style={styles.action}>
+                <TextInput
+                  multiline={true}
+                  numberOfLines={8}
+                  placeholder="Post Description"
+                  placeholderTextColor="#666666"
+                  autoCapitalize="none"
                   style={[
-                    styles.text_footer,
+                    styles.textInput,
                     {
                       color: "black",
                     },
                   ]}
-                >
-                  Description
-                </Text>
-                <View style={styles.action}>
-                  <TextInput
-                    multiline={true}
-                    numberOfLines={8}
-                    placeholder="Post Description"
-                    placeholderTextColor="#666666"
-                    autoCapitalize="none"
-                    style={[
-                      styles.textInput,
-                      {
-                        color: "black",
-                      },
-                    ]}
-                    onChangeText={(val) => this.descriptionInputChange(val)}
-                    // onChangeText={(text) => this.setState({ description: text })}
-                    value={this.state.description}
-                  />
-                  {this.state.check_descriptionInputChange ? (
-                    <Animatable.View animation="bounceIn">
-                      <Feather name="check-circle" color="green" size={20} />
-                    </Animatable.View>
-                  ) : null}
-                </View>
-                {this.state.isValidDescription ? null : (
-                  <Animatable.View animation="fadeInLeft" duration={500}>
-                    <Text style={styles.errorMsg}>
-                      Description is Required.
-                    </Text>
-                    <Text style={styles.errorMsg}>
-                      Description must me more than 20 character.
-                    </Text>
+                  onChangeText={(val) => this.descriptionInputChange(val)}
+                  // onChangeText={(text) => this.setState({ description: text })}
+                  value={this.state.description}
+                />
+                {this.state.check_descriptionInputChange ? (
+                  <Animatable.View animation="bounceIn">
+                    <Feather name="check-circle" color="green" size={20} />
                   </Animatable.View>
-                )}
+                ) : null}
+              </View>
+              {this.state.isValidDescription ? null : (
+                <Animatable.View animation="fadeInLeft" duration={500}>
+                  <Text style={styles.errorMsg}>Description is Required.</Text>
+                  <Text style={styles.errorMsg}>
+                    Description must me more than 20 character.
+                  </Text>
+                </Animatable.View>
+              )}
 
-                <View style={styles.button}>
-                  <TouchableOpacity
+              <View style={styles.button}>
+                <TouchableOpacity
+                  style={styles.signIn}
+                  onPress={() => this.handleSubmit(pId, navigation)}
+                >
+                  <LinearGradient
+                    colors={["black", "white"]}
                     style={styles.signIn}
-                    onPress={() => this.handleSubmit(pId, navigation)}
-                  >
-                    <LinearGradient
-                      colors={["black", "white"]}
-                      style={styles.signIn}
-                    >
-                      <Text
-                        style={[
-                          styles.textSign,
-                          {
-                            color: "#fff",
-                          },
-                        ]}
-                      >
-                        Post
-                      </Text>
-                    </LinearGradient>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    onPress={() => navigation.navigate("Home")}
-                    style={[
-                      styles.signIn,
-                      {
-                        borderColor: "black",
-                        borderWidth: 1,
-                        marginTop: 15,
-                      },
-                    ]}
                   >
                     <Text
                       style={[
                         styles.textSign,
                         {
-                          color: "black",
+                          color: "#fff",
                         },
                       ]}
                     >
-                      Cancel
+                      Post
                     </Text>
-                  </TouchableOpacity>
-                </View>
-              </Animatable.View>
-            </View>
-          </Modal>
-        </View>
-      );
-    } else {
-      return (
-        <View>
-          <Text>Delete</Text>
-        </View>
-      );
-    }
+                  </LinearGradient>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("Home")}
+                  style={[
+                    styles.signIn,
+                    {
+                      borderColor: "black",
+                      borderWidth: 1,
+                      marginTop: 15,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.textSign,
+                      {
+                        color: "black",
+                      },
+                    ]}
+                  >
+                    Cancel
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </Animatable.View>
+          </View>
+        </Modal>
+      </View>
+    );
   }
 }
 

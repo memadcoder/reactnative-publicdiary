@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, Alert } from "react-native";
 
 import { ListItem, Icon } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -70,6 +70,14 @@ class Home extends Component {
     await this.setState({ ...this.state.posts.posts, toPost });
   }
 
+  async handleDelete(pid) {
+    console.log(pid);
+    const postState = this.state.posts.posts;
+    const post = postState.filter((post) => post.id !== pid);
+    console.log("after pluck of", post);
+    await this.setState({ ...this.state.posts.posts, post });
+  }
+
   render() {
     const { navigation } = this.props;
 
@@ -114,16 +122,37 @@ class Home extends Component {
               {item.userId === this.state.loggedInId ? (
                 <MenuProvider>
                   <Menu
-                    onSelect={(value) =>
-                      navigation.navigate("EditModal", {
-                        navigation: navigation,
-                        selected: value,
-                        pId: item.id,
-                        userId: this.state.loggedInId,
-                        titleValue: item.title,
-                        descriptionValue: item.description,
-                      })
-                    }
+                    onSelect={(value) => {
+                      if (value === 1) {
+                        navigation.navigate("EditModal", {
+                          navigation: navigation,
+                          selected: value,
+                          pId: item.id,
+                          userId: this.state.loggedInId,
+                          titleValue: item.title,
+                          descriptionValue: item.description,
+                        });
+                      } else if (value === 2) {
+                        Alert.alert(
+                          "Delete Post",
+                          "Are you sure you want to delete?",
+                          [
+                            {
+                              text: "Yes",
+                              onPress: () => this.handleDelete(item.id),
+                            },
+                            {
+                              text: "No",
+                              onPress: () => console.log("No Pressed"),
+                              style: "cancel",
+                            },
+                          ],
+                          { cancelable: false }
+                        );
+                      } else {
+                        alert("no allowed");
+                      }
+                    }}
                   >
                     <MenuTrigger>
                       <Icon
@@ -146,16 +175,7 @@ class Home extends Component {
                 </MenuProvider>
               ) : (
                 <MenuProvider>
-                  <Menu
-                    onSelect={(value) =>
-                      navigation.navigate("EditModal", {
-                        navigation: navigation,
-                        selected: value,
-                        pId: item.id,
-                        userId: this.state.loggedInId,
-                      })
-                    }
-                  >
+                  <Menu onSelect={(value) => alert("report ")}>
                     <MenuTrigger>
                       <Icon
                         name={"dots-three-vertical"}
@@ -166,7 +186,7 @@ class Home extends Component {
                     </MenuTrigger>
                     <MenuOptions>
                       {/* <MenuOption value={1} text="report" /> */}
-                      <MenuOption value={1}>
+                      <MenuOption value={3}>
                         <Text style={{ margin: -5 }}>Report Entry</Text>
                       </MenuOption>
                     </MenuOptions>
