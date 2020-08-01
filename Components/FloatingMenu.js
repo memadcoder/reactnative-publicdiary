@@ -5,17 +5,6 @@ import Icon from "react-native-vector-icons/Ionicons";
 import PostModal from "./PostModalComponent";
 
 class FloatMenu extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isOpenPost: false,
-    };
-  }
-
-  //   openAddPost() {
-  //     this.setState({ isOpenPost: true });
-  //   }
-
   render() {
     const { navigation } = this.props;
 

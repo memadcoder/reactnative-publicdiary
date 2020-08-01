@@ -17,6 +17,7 @@ import {
   MenuOption,
   MenuTrigger,
 } from "react-native-popup-menu";
+import posts from "../shared/posts.js";
 
 class Home extends Component {
   constructor(props) {
@@ -70,12 +71,21 @@ class Home extends Component {
     await this.setState({ ...this.state.posts.posts, toPost });
   }
 
-  async handleDelete(pid) {
+  handleDelete(pid) {
     console.log(pid);
     const postState = this.state.posts.posts;
     const post = postState.filter((post) => post.id !== pid);
     console.log("after pluck of", post);
-    await this.setState({ ...this.state.posts.posts, post });
+
+    const postUpdate = {
+      posts: post,
+    };
+
+    this.setState({
+      posts: postUpdate,
+    });
+
+    console.log("final state", this.state.posts.posts);
   }
 
   render() {
