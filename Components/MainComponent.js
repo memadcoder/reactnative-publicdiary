@@ -38,11 +38,15 @@ function MyDrawer() {
   );
 }
 
-export default function Main() {
+export default function Main(props) {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Public Diary" component={MyDrawer} />
+        <Stack.Screen
+          name="Public Diary"
+          style={{ background: "black" }}
+          component={MyDrawer}
+        />
 
         <Stack.Screen
           name="UserDetail"

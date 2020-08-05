@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, FlatList, Alert, Share } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Alert,
+  Share,
+  StatusBar,
+} from "react-native";
 
 import { ListItem, Icon } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -125,6 +133,8 @@ class Home extends Component {
           key={index}
           style={styles.postContainer}
         >
+          <StatusBar backgroundColor="black" barStyle="light-content" />
+
           <View
             style={{
               flex: 1,

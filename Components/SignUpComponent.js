@@ -115,7 +115,7 @@ const SignUpScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="white" barStyle="light-content" />
+      <StatusBar backgroundColor="black" barStyle="light-content" />
       <Animatable.View
         animation="fadeInUpBig"
         style={[

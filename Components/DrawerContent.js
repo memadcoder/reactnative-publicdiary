@@ -30,23 +30,23 @@ function DrawerContent(props) {
                 size={50}
               />
               <View style={{ marginLeft: 15, flexDirection: "column" }}>
-                <Title style={styles.title}>John Doe</Title>
-                <Caption style={styles.caption}>@j_doe</Caption>
+                <Title style={styles.title}>Madhav Gautam</Title>
+                <Caption style={styles.caption}>@memadcoder</Caption>
               </View>
             </View>
 
             <View style={styles.row}>
               <View style={styles.section}>
                 <Paragraph style={[styles.paragraph, styles.caption]}>
-                  80
+                  100
                 </Paragraph>
-                <Caption style={styles.caption}>Following</Caption>
+                <Caption style={styles.caption}>Posts</Caption>
               </View>
               <View style={styles.section}>
                 <Paragraph style={[styles.paragraph, styles.caption]}>
-                  100
+                  80
                 </Paragraph>
-                <Caption style={styles.caption}>Followers</Caption>
+                <Caption style={styles.caption}>Likes</Caption>
               </View>
             </View>
           </View>
@@ -63,7 +63,7 @@ function DrawerContent(props) {
             />
             <DrawerItem
               icon={({ color, size }) => (
-                <Icon name="account-outline" color={color} size={size} />
+                <Icon name="bookmark" color={color} size={size} />
               )}
               label="Highlights"
               onPress={() => {
@@ -72,11 +72,30 @@ function DrawerContent(props) {
             />
             <DrawerItem
               icon={({ color, size }) => (
-                <Icon name="bookmark-outline" color={color} size={size} />
+                <Icon name="contacts" color={color} size={size} />
+              )}
+              label="Contact Us"
+              onPress={() => {
+                props.navigation.navigate("ContactUs");
+              }}
+            />
+            <DrawerItem
+              icon={({ color, size }) => (
+                <Icon name="login" color={color} size={size} />
               )}
               label="Sign In"
               onPress={() => {
                 props.navigation.navigate("SignIn");
+              }}
+            />
+
+            <DrawerItem
+              icon={({ color, size }) => (
+                <Icon name="account-plus-outline" color={color} size={size} />
+              )}
+              label="Sign Up"
+              onPress={() => {
+                props.navigation.navigate("SignUp");
               }}
             />
             <DrawerItem
@@ -88,26 +107,8 @@ function DrawerContent(props) {
                 props.navigation.navigate("SettingsScreen");
               }}
             />
-            <DrawerItem
-              icon={({ color, size }) => (
-                <Icon name="account-check-outline" color={color} size={size} />
-              )}
-              label="Sign Up"
-              onPress={() => {
-                props.navigation.navigate("SignUp");
-              }}
-            />
-            <DrawerItem
-              icon={({ color, size }) => (
-                <Icon name="account-check-outline" color={color} size={size} />
-              )}
-              label="Contact Us"
-              onPress={() => {
-                props.navigation.navigate("ContactUs");
-              }}
-            />
           </Drawer.Section>
-          <Drawer.Section title="Preferences">
+          {/* <Drawer.Section title="Preferences">
             <TouchableRipple
               onPress={() => {
                 toggleTheme();
@@ -120,13 +121,13 @@ function DrawerContent(props) {
                 </View>
               </View>
             </TouchableRipple>
-          </Drawer.Section>
+          </Drawer.Section> */}
         </View>
       </DrawerContentScrollView>
       <Drawer.Section style={styles.bottomDrawerSection}>
         <DrawerItem
           icon={({ color, size }) => (
-            <Icon name="exit-to-app" color={color} size={size} />
+            <Icon name="logout" color={color} size={size} />
           )}
           label="Sign Out"
           onPress={() => {
