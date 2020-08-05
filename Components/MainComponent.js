@@ -4,11 +4,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
 
 import { NavigationContainer } from "@react-navigation/native";
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-} from "@react-navigation/drawer";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import ContactUs from "./ContactComponent";
@@ -23,6 +19,8 @@ import EditModal from "./EditModalComponent";
 import SignIn from "./SignInComponent";
 import SignUp from "./SignUpComponent";
 
+import DrawerContent from "./DrawerContent";
+
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
@@ -30,76 +28,12 @@ function MyDrawer() {
   const dimensions = useWindowDimensions();
 
   return (
-    <Drawer.Navigator
-      drawerType="permanent"
-      drawerType={dimensions.width >= 768 ? "permanent" : "front"}
-      drawerStyle={{
-        width: 240,
-      }}
-      initialRouteName="Home"
-    >
-      <Drawer.Screen
-        name="Home"
-        component={Home}
-        options={{
-          drawerIcon: (config) => (
-            <Icon
-              size={23}
-              name={Platform.OS === "android" ? "md-home" : "ios-home"}
-            ></Icon>
-          ),
-        }}
-      />
-
-      <Drawer.Screen
-        name="Highlights"
-        component={Highlight}
-        options={{
-          drawerIcon: (config) => (
-            <Icon
-              size={23}
-              name={Platform.OS === "android" ? "md-heart" : "ios-heart"}
-            ></Icon>
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="SignIn"
-        component={SignIn}
-        options={{
-          drawerIcon: (config) => (
-            <Icon
-              size={23}
-              name={Platform.OS === "android" ? "md-log-in" : "ios-log-in"}
-            ></Icon>
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="SignUp"
-        component={SignUp}
-        options={{
-          drawerIcon: (config) => (
-            <Feather
-              size={23}
-              name={Platform.OS === "android" ? "user-plus" : "ios-user-plus"}
-            />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Contact"
-        component={ContactUs}
-        options={{
-          title: "Contact",
-          drawerIcon: (config) => (
-            <Icon
-              size={23}
-              name={Platform.OS === "android" ? "md-contacts" : "ios-contacts"}
-            ></Icon>
-          ),
-        }}
-      />
+    <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
+      <Drawer.Screen name="Home" component={Home} />
+      <Drawer.Screen name="Highlight" component={Highlight} />
+      <Drawer.Screen name="SignIn" component={SignIn} />
+      <Drawer.Screen name="SignUp" component={SignUp} />
+      <Drawer.Screen name="ContactUs" component={ContactUs} />
     </Drawer.Navigator>
   );
 }
@@ -108,7 +42,8 @@ export default function Main() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={MyDrawer} />
+        <Stack.Screen name="Public Diary" component={MyDrawer} />
+
         <Stack.Screen
           name="UserDetail"
           component={UserDetail}
