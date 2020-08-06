@@ -35,9 +35,6 @@ class Home extends Component {
       loggedInId: 1,
     };
   }
-  componentDidMount() {
-    console.log("initial", this.state.posts);
-  }
 
   async handleHighligted(pid) {
     const postState = this.state.posts.posts;

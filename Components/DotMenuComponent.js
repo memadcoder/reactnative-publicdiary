@@ -11,9 +11,10 @@ import {
 import { Icon } from "react-native-elements";
 
 function ThreeDotMenu(props) {
-  console.log("loggedIN Id==>", JSON.stringify(props));
-  const [loggedIn, setLogIn] = useState(false);
-  if (loggedIn) {
+  var loggedIn = props.loggedIn;
+  var userId = props.userId;
+  console.log("loggedIN===>", loggedIn, "userId===>", userId);
+  if (loggedIn === userId) {
     return (
       <MenuProvider>
         <Menu onSelect={(value) => alert(value)}>

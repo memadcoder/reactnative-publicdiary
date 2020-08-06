@@ -26,9 +26,17 @@ const Stack = createStackNavigator();
 
 function MyDrawer() {
   const dimensions = useWindowDimensions();
+  const loggedInUserDetail = {
+    name: "Madhav",
+    username: "memadcoder",
+    totalPosts: 100,
+    totalLikes: 80,
+  };
 
   return (
-    <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
+    <Drawer.Navigator
+      drawerContent={(props) => <DrawerContent value={loggedInUserDetail} />}
+    >
       <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen name="Highlight" component={Highlight} />
       <Drawer.Screen name="SignIn" component={SignIn} />
@@ -42,18 +50,19 @@ export default function Main(props) {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen
-          name="Public Diary"
-          style={{ background: "black" }}
-          component={MyDrawer}
-        />
+        <Stack.Screen name="Public Diary" component={MyDrawer} />
 
         <Stack.Screen
           name="UserDetail"
           component={UserDetail}
           options={({ route }) => ({
             title: route.params.name,
-            headerRight: () => <ThreeDotMenu />,
+            headerRight: () => (
+              <ThreeDotMenu
+                loggedIn={route.params.loggedIn}
+                userId={route.params.userId}
+              />
+            ),
           })}
         />
         <Stack.Screen

@@ -15,7 +15,8 @@ import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-function DrawerContent(props) {
+const DrawerContent = (props) => {
+  console.log(props.value.name);
   const paperTheme = useTheme();
   return (
     <View style={{ flex: 1 }}>
@@ -30,21 +31,23 @@ function DrawerContent(props) {
                 size={50}
               />
               <View style={{ marginLeft: 15, flexDirection: "column" }}>
-                <Title style={styles.title}>Madhav Gautam</Title>
-                <Caption style={styles.caption}>@memadcoder</Caption>
+                <Title style={styles.title}>{props.value.name}</Title>
+                <Caption style={styles.caption}>
+                  @{props.value.username}
+                </Caption>
               </View>
             </View>
 
             <View style={styles.row}>
               <View style={styles.section}>
                 <Paragraph style={[styles.paragraph, styles.caption]}>
-                  100
+                  {props.value.totalPosts}
                 </Paragraph>
                 <Caption style={styles.caption}>Posts</Caption>
               </View>
               <View style={styles.section}>
                 <Paragraph style={[styles.paragraph, styles.caption]}>
-                  80
+                  {props.value.totalLikes}
                 </Paragraph>
                 <Caption style={styles.caption}>Likes</Caption>
               </View>
@@ -137,7 +140,7 @@ function DrawerContent(props) {
       </Drawer.Section>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   drawerContent: {

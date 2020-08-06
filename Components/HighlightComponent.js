@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, Share } from "react-native";
 
 import { ListItem, Icon } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -26,7 +26,92 @@ class Highlight extends Component {
     };
   }
 
+  async handleHighligted(pid) {
+    const postState = this.state.posts.posts;
+    const post = postState.filter((post) => post.id === pid);
+
+    post[0].highlight.indexOf(this.state.loggedInId) === -1
+      ? post[0].highlight.push(this.state.loggedInId)
+      : post[0].highlight.pop(this.state.loggedInId);
+
+    // post[0].highlight.push(this.state.loggedInId);
+
+    const toPost = post[0];
+    // console.log("object to push======>", toPost);
+    await this.setState({ ...this.state.posts.posts, toPost });
+    // console.log("current state", this.state.posts);
+  }
+
+  async handleLiked(pid) {
+    const postState = this.state.posts.posts;
+    const post = postState.filter((post) => post.id === pid);
+
+    post[0].likes.indexOf(this.state.loggedInId) === -1
+      ? post[0].likes.push(this.state.loggedInId)
+      : post[0].likes.pop(this.state.loggedInId);
+
+    const toPost = post[0];
+    await this.setState({ ...this.state.posts.posts, toPost });
+  }
+
+  async handleUnliked(pid) {
+    const postState = this.state.posts.posts;
+    const post = postState.filter((post) => post.id === pid);
+
+    post[0].unlikes.indexOf(this.state.loggedInId) === -1
+      ? post[0].unlikes.push(this.state.loggedInId)
+      : post[0].unlikes.pop(this.state.loggedInId);
+
+    const toPost = post[0];
+    await this.setState({ ...this.state.posts.posts, toPost });
+  }
+
+  async handleShare(title, description) {
+    console.log(title, description);
+    try {
+      const result = await Share.share(
+        {
+          title: title,
+          message: title + ":\n " + description + " ",
+          url: "www.google.com",
+        },
+        {
+          dialogTitle: "Share " + title,
+        }
+      );
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  handleDelete(pid) {
+    console.log(pid);
+    const postState = this.state.posts.posts;
+    const post = postState.filter((post) => post.id !== pid);
+    console.log("after pluck of", post);
+
+    const postUpdate = {
+      posts: post,
+    };
+
+    this.setState({
+      posts: postUpdate,
+    });
+
+    console.log("final state", this.state.posts.posts);
+  }
+
   render() {
+    const { navigation } = this.props;
     const ans = [];
     const posts = this.state.posts.posts;
     console.log(posts);
@@ -69,68 +154,7 @@ class Highlight extends Component {
                 marginTop: 18,
                 alignContent: "flex-start",
               }}
-            >
-              {item.userId === this.state.loggedInId ? (
-                <MenuProvider>
-                  <Menu
-                    onSelect={(value) =>
-                      navigation.navigate("EditModal", {
-                        navigation: navigation,
-                        selected: value,
-                        pId: postId,
-                        userId: loggedInId,
-                      })
-                    }
-                  >
-                    <MenuTrigger>
-                      <Icon
-                        name={"dots-three-vertical"}
-                        type={"entypo"}
-                        size={20}
-                        color="black"
-                      />
-                    </MenuTrigger>
-                    <MenuOptions>
-                      {/* <MenuOption value={1} text="report" /> */}
-                      <MenuOption value={1}>
-                        <Text style={{ margin: -5 }}>Edit Entry</Text>
-                      </MenuOption>
-                      <MenuOption value={2}>
-                        <Text style={{ margin: -5 }}>Delete Entry</Text>
-                      </MenuOption>
-                    </MenuOptions>
-                  </Menu>
-                </MenuProvider>
-              ) : (
-                <MenuProvider>
-                  <Menu
-                    onSelect={(value) =>
-                      navigation.navigate("EditModal", {
-                        navigation: navigation,
-                        selected: value,
-                        pId: postId,
-                        userId: loggedInId,
-                      })
-                    }
-                  >
-                    <MenuTrigger>
-                      <Icon
-                        name={"dots-three-vertical"}
-                        type={"entypo"}
-                        size={20}
-                        color="black"
-                      />
-                    </MenuTrigger>
-                    <MenuOptions>
-                      {/* <MenuOption value={1} text="report" /> */}
-                      <MenuOption value={1}>
-                        <Text style={{ margin: -5 }}>Report Entry</Text>
-                      </MenuOption>
-                    </MenuOptions>
-                  </Menu>
-                </MenuProvider>
-              )}
-            </View>
+            ></View>
           </View>
           <View style={styles.postContainer}>
             <Text style={{ fontSize: 20, fontWeight: "bold" }}>
@@ -158,7 +182,7 @@ class Highlight extends Component {
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() => this.setState({ heart: !this.state.heart })}
+                  onPress={() => this.handleHighligted(item.id)}
                 />
                 <Text>Favorite</Text>
                 <Text>{item.highlight.length}</Text>
@@ -175,9 +199,7 @@ class Highlight extends Component {
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() =>
-                    this.setState({ like: !this.state.like, unlike: false })
-                  }
+                  onPress={() => this.handleLiked(item.id)}
                 />
                 <Text>Likes</Text>
                 <Text>{item.likes.length}</Text>
@@ -194,9 +216,7 @@ class Highlight extends Component {
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() =>
-                    this.setState({ unlike: !this.state.unlike, like: false })
-                  }
+                  onPress={() => this.handleUnliked(item.id)}
                 />
                 <Text>UnLikes</Text>
                 <Text>{item.unlikes.length}</Text>
@@ -209,7 +229,7 @@ class Highlight extends Component {
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() => alert("share")}
+                  onPress={() => this.handleShare(item.title, item.description)}
                 />
                 <Text>Shares</Text>
                 <Text>{item.shares.length}</Text>
