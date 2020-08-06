@@ -8,13 +8,6 @@ import * as Animatable from "react-native-animatable";
 import Icons from "react-native-vector-icons/FontAwesome";
 
 import POSTS from "../shared/posts";
-import {
-  Menu,
-  MenuProvider,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from "react-native-popup-menu";
 
 class UserDetail extends Component {
   constructor(props) {
@@ -95,7 +88,7 @@ class UserDetail extends Component {
   render() {
     console.log("props in userdetails==>", this.props);
     const { navigation } = this.props;
-    const { postId, loggedInId } = this.props.route.params;
+    const { postId, loggedInId, loggedInState } = this.props.route.params;
     const ans = this.props.route.params;
     const id = ans.userId;
     console.log("userId=>", id);

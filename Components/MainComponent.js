@@ -18,6 +18,7 @@ import ReportModal from "./ReportModalComponent";
 import EditModal from "./EditModalComponent";
 import SignIn from "./SignInComponent";
 import SignUp from "./SignUpComponent";
+import Setting from "./SettingComponent";
 
 import DrawerContent from "./DrawerContent";
 
@@ -26,22 +27,29 @@ const Stack = createStackNavigator();
 
 function MyDrawer() {
   const dimensions = useWindowDimensions();
+  const loggedInState = true;
   const loggedInUserDetail = {
     name: "Madhav",
     username: "memadcoder",
     totalPosts: 100,
     totalLikes: 80,
   };
-
   return (
     <Drawer.Navigator
-      drawerContent={(props) => <DrawerContent value={loggedInUserDetail} />}
+      drawerContent={(props) => (
+        <DrawerContent
+          {...props}
+          value={loggedInUserDetail}
+          loggedInState={loggedInState}
+        />
+      )}
     >
       <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen name="Highlight" component={Highlight} />
       <Drawer.Screen name="SignIn" component={SignIn} />
       <Drawer.Screen name="SignUp" component={SignUp} />
       <Drawer.Screen name="ContactUs" component={ContactUs} />
+      <Drawer.Screen name="Setting" component={Setting} />
     </Drawer.Navigator>
   );
 }
@@ -55,12 +63,14 @@ export default function Main(props) {
         <Stack.Screen
           name="UserDetail"
           component={UserDetail}
-          options={({ route }) => ({
-            title: route.params.name,
+          options={(props) => ({
+            title: props.route.params.name,
             headerRight: () => (
               <ThreeDotMenu
-                loggedIn={route.params.loggedIn}
-                userId={route.params.userId}
+                loggedIn={props.route.params.loggedIn}
+                userId={props.route.params.userId}
+                loggedInState={props.route.params.loggedInState}
+                navigation={props.navigation}
               />
             ),
           })}

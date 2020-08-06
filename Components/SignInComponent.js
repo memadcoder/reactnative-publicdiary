@@ -229,7 +229,7 @@ const SignInScreen = ({ navigation }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            // onPress={() => navigation.navigate("SignUpScreen")}
+            onPress={() => navigation.navigate("SignUp")}
             style={[
               styles.signIn,
               {

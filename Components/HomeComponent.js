@@ -33,6 +33,7 @@ class Home extends Component {
     this.state = {
       posts: POSTS,
       loggedInId: 1,
+      loggedInState: true,
     };
   }
 
@@ -152,6 +153,7 @@ class Home extends Component {
                     userId: item.userId,
                     postId: item.id,
                     loggedIn: this.state.loggedInId,
+                    loggedInState: this.state.loggedInState,
                   })
                 }
               />
@@ -163,79 +165,83 @@ class Home extends Component {
                 alignContent: "flex-start",
               }}
             >
-              {item.userId === this.state.loggedInId ? (
-                <MenuProvider>
-                  <Menu
-                    onSelect={(value) => {
-                      if (value === 1) {
-                        navigation.navigate("EditModal", {
-                          navigation: navigation,
-                          selected: value,
-                          pId: item.id,
-                          userId: this.state.loggedInId,
-                          titleValue: item.title,
-                          descriptionValue: item.description,
-                        });
-                      } else if (value === 2) {
-                        Alert.alert(
-                          "Delete Post",
-                          "Are you sure you want to delete?",
-                          [
-                            {
-                              text: "Yes",
-                              onPress: () => this.handleDelete(item.id),
-                            },
-                            {
-                              text: "No",
-                              onPress: () => console.log("No Pressed"),
-                              style: "cancel",
-                            },
-                          ],
-                          { cancelable: false }
-                        );
-                      } else {
-                        alert("no allowed");
-                      }
-                    }}
-                  >
-                    <MenuTrigger>
-                      <Icon
-                        name={"dots-three-vertical"}
-                        type={"entypo"}
-                        size={20}
-                        color="black"
-                      />
-                    </MenuTrigger>
-                    <MenuOptions>
-                      {/* <MenuOption value={1} text="report" /> */}
-                      <MenuOption value={1}>
-                        <Text style={{ margin: -5 }}>Edit Entry</Text>
-                      </MenuOption>
-                      <MenuOption value={2}>
-                        <Text style={{ margin: -5 }}>Delete Entry</Text>
-                      </MenuOption>
-                    </MenuOptions>
-                  </Menu>
-                </MenuProvider>
+              {this.state.loggedInState ? (
+                item.userId === this.state.loggedInId ? (
+                  <MenuProvider>
+                    <Menu
+                      onSelect={(value) => {
+                        if (value === 1) {
+                          navigation.navigate("EditModal", {
+                            navigation: navigation,
+                            selected: value,
+                            pId: item.id,
+                            userId: this.state.loggedInId,
+                            titleValue: item.title,
+                            descriptionValue: item.description,
+                          });
+                        } else if (value === 2) {
+                          Alert.alert(
+                            "Delete Post",
+                            "Are you sure you want to delete?",
+                            [
+                              {
+                                text: "Yes",
+                                onPress: () => this.handleDelete(item.id),
+                              },
+                              {
+                                text: "No",
+                                onPress: () => console.log("No Pressed"),
+                                style: "cancel",
+                              },
+                            ],
+                            { cancelable: false }
+                          );
+                        } else {
+                          alert("no allowed");
+                        }
+                      }}
+                    >
+                      <MenuTrigger>
+                        <Icon
+                          name={"dots-three-vertical"}
+                          type={"entypo"}
+                          size={20}
+                          color="black"
+                        />
+                      </MenuTrigger>
+                      <MenuOptions>
+                        {/* <MenuOption value={1} text="report" /> */}
+                        <MenuOption value={1}>
+                          <Text style={{ margin: -5 }}>Edit Entry</Text>
+                        </MenuOption>
+                        <MenuOption value={2}>
+                          <Text style={{ margin: -5 }}>Delete Entry</Text>
+                        </MenuOption>
+                      </MenuOptions>
+                    </Menu>
+                  </MenuProvider>
+                ) : (
+                  <MenuProvider>
+                    <Menu onSelect={(value) => alert("report ")}>
+                      <MenuTrigger>
+                        <Icon
+                          name={"dots-three-vertical"}
+                          type={"entypo"}
+                          size={20}
+                          color="black"
+                        />
+                      </MenuTrigger>
+                      <MenuOptions>
+                        {/* <MenuOption value={1} text="report" /> */}
+                        <MenuOption value={3}>
+                          <Text style={{ margin: -5 }}>Report Entry</Text>
+                        </MenuOption>
+                      </MenuOptions>
+                    </Menu>
+                  </MenuProvider>
+                )
               ) : (
-                <MenuProvider>
-                  <Menu onSelect={(value) => alert("report ")}>
-                    <MenuTrigger>
-                      <Icon
-                        name={"dots-three-vertical"}
-                        type={"entypo"}
-                        size={20}
-                        color="black"
-                      />
-                    </MenuTrigger>
-                    <MenuOptions>
-                      {/* <MenuOption value={1} text="report" /> */}
-                      <MenuOption value={3}>
-                        <Text style={{ margin: -5 }}>Report Entry</Text>
-                      </MenuOption>
-                    </MenuOptions>
-                  </Menu>
-                </MenuProvider>
+                <View></View>
               )}
             </View>
           </View>
@@ -329,7 +335,11 @@ class Home extends Component {
           renderItem={RenderPost}
           keyExtractor={(item) => item.id.toString()}
         />
-        <FloatMenu navigation={navigation} />
+        {this.state.loggedInState ? (
+          <FloatMenu navigation={navigation} />
+        ) : (
+          <View></View>
+        )}
       </SafeAreaView>
     );
   }

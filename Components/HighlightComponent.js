@@ -7,14 +7,6 @@ import * as Animatable from "react-native-animatable";
 
 import Icons from "react-native-vector-icons/FontAwesome";
 
-import {
-  Menu,
-  MenuProvider,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from "react-native-popup-menu";
-
 import POSTS from "../shared/posts";
 
 class Highlight extends Component {
