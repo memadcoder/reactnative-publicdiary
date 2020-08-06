@@ -77,8 +77,9 @@ class Home extends Component {
     await this.setState({ ...this.state.posts.posts, toPost });
   }
 
-  async handleShare(title, description) {
-    console.log(title, description);
+  async handleShare(title, description, pid) {
+    const postState = this.state.posts.posts;
+    const post = postState.filter((post) => post.id === pid);
     try {
       const result = await Share.share(
         {
@@ -94,10 +95,18 @@ class Home extends Component {
         if (result.activityType) {
           // shared with activity type of result.activityType
         } else {
+          post[0].shares.push(this.state.loggedInId);
+
+          const toPost = post[0];
+          await this.setState({ ...this.state.posts.posts, toPost });
           // shared
         }
       } else if (result.action === Share.dismissedAction) {
         // dismissed
+        post[0].shares.pop(this.state.loggedInId);
+
+        const toPost = post[0];
+        await this.setState({ ...this.state.posts.posts, toPost });
       }
     } catch (error) {
       alert(error.message);
@@ -318,7 +327,9 @@ class Home extends Component {
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() => this.handleShare(item.title, item.description)}
+                  onPress={() =>
+                    this.handleShare(item.title, item.description, item.id)
+                  }
                 />
                 <Text>Share</Text>
                 <Text>{item.shares.length}</Text>
