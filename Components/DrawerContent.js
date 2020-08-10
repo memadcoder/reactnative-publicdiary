@@ -171,7 +171,7 @@ const DrawerContent = (props) => {
             )}
             label="Sign Out"
             onPress={() => {
-              signOut();
+              alert("Sign Out");
             }}
           />
         </Drawer.Section>

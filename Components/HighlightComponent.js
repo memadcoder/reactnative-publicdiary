@@ -104,6 +104,7 @@ class Highlight extends Component {
 
   render() {
     const { navigation } = this.props;
+
     const ans = [];
     const posts = this.state.posts.posts;
     console.log(posts);

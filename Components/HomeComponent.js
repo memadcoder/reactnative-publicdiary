@@ -9,6 +9,9 @@ import {
   StatusBar,
 } from "react-native";
 
+import { baseUrl } from "../shared/baseUrl";
+import axios from "axios";
+
 import { ListItem, Icon } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Animatable from "react-native-animatable";
@@ -35,6 +38,53 @@ class Home extends Component {
       loggedInId: 1,
       loggedInState: true,
     };
+  }
+
+  componentDidMount() {
+    // axios.request(options).catch(function (error) {
+    //   if (!error.response) {
+    //     console.log("error...");
+    //   } else {
+    //     // http status code
+    //     const code = error.response.status;
+    //     // response data
+    //     const response = error.response.data;
+    //   }
+    // });
+    axios
+      .get("https://calender.bloggernepal.com/api/today")
+      .then((response) => {
+        // console.log("hi");
+        console.log("response");
+        // dispatch(addPosts(response));
+      })
+      .catch((error) => {
+        console.log("statuscode", error);
+        console.log("hi");
+        // dispatch(postsFailed(error));
+      });
+    // return fetch("https://calender.bloggernepal.com/api/today")
+    //   .then(
+    //     (response) => {
+    //       console.log("hi");
+    //       if (response.ok) {
+    //         return response;
+    //       } else {
+    //         var error = new Error(
+    //           "Error " + response.status + ": " + response.statusText
+    //         );
+    //         error.response = response;
+    //         throw error;
+    //       }
+    //     },
+    //     (error) => {
+    //       var errmess = new Error(error.message);
+    //       throw errmess;
+    //     }
+    //   )
+    //   .then((response) => response.json())
+    //   .then((posts) => console.log("success"))
+    //   .catch((error) => console.log("failed==>error", error));
   }
 
   async handleHighligted(pid) {
