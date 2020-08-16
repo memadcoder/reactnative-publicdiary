@@ -4,38 +4,17 @@ import axios from "axios";
 
 export const fetchPosts = () => (dispatch) => {
   dispatch(postsLoading());
-  // axios
-  //   .get(baseUrl)
-  //   .then((response) => {
-  //     console.log("response");
-  //     dispatch(addPosts(response));
-  //   })
-  //   .catch((error) => {
-  //     console.log("statuscode", error);
-  //     dispatch(postsFailed(error));
-  //   });
-  // alert("Hello");
-  // return fetch(baseUrl)
-  //   .then(
-  //     (response) => {
-  //       if (response.ok) {
-  //         return response;
-  //       } else {
-  //         var error = new Error(
-  //           "Error " + response.status + ": " + response.statusText
-  //         );
-  //         error.response = response;
-  //         throw error;
-  //       }
-  //     },
-  //     (error) => {
-  //       var errmess = new Error(error.message);
-  //       throw errmess;
-  //     }
-  //   )
-  //   .then((response) => response.json())
-  //   .then((posts) => dispatch(addPosts(posts)))
-  //   .catch((error) => dispatch(postsFailed(error.message)));
+
+  axios
+    .get(baseUrl + "entry")
+    .then((response) => {
+      // console.log("returned from server==>", response);
+      dispatch(addPosts(response.data.entries));
+    })
+    .catch((error) => {
+      console.log(error);
+      dispatch(postsFailed(error));
+    });
 };
 
 export const postsLoading = () => ({
@@ -90,4 +69,33 @@ export const highlightsFailed = (errmess) => ({
 export const addHighlights = (highlights) => ({
   type: ActionTypes.ADD_HIGHLIGHTS,
   payload: highlights,
+});
+
+export const createPost = (postDetails) => (dispatch) => {
+  console.log("post Details=>", postDetails);
+  axios
+    .post(baseUrl + "entry", {
+      heading: postDetails.heading,
+      content: postDetails.content,
+    })
+    .then(function (response) {
+      console.log("post to update=>", response.data.newEntry);
+      dispatch(updatePosts(response.data.newEntry));
+    })
+    .catch(function (error) {
+      console.log(error);
+      dispatch(updateFailed(error));
+    });
+
+  // dispatch(addFavorite(dishId));
+};
+
+export const updatePosts = (update) => ({
+  type: ActionTypes.UPDATE_POSTS,
+  payload: update,
+});
+
+export const updateFailed = (errmess) => ({
+  type: ActionTypes.UPDATE_POSTS_FAILED,
+  payload: errmess,
 });

@@ -18,6 +18,13 @@ import Feather from "react-native-vector-icons/Feather";
 
 import moment from "moment";
 
+import { connect } from "react-redux";
+import { createPost } from "../Redux/ActionCreator";
+
+const mapDispatchToProps = (dispatch) => ({
+  createPost: (postDetails) => dispatch(createPost(postDetails)),
+});
+
 class PostModal extends Component {
   constructor(props) {
     super(props);
@@ -42,26 +49,13 @@ class PostModal extends Component {
   };
 
   handleSubmit(navigation) {
-    var date = moment().utcOffset("+05:30").format(" Y-MMM-DD hh:mm a");
+    // var date = moment().utcOffset("+05:30").format(" Y-MMM-DD hh:mm a");
     if (this.state.isValidTitle && this.state.isValidDescription) {
-      const newPost = {
-        id: date,
-        userId: this.loggedInUserDetails.userId,
-        user: this.loggedInUserDetails.user,
-        username: this.loggedInUserDetails.username,
-        date: date,
-        likes: [],
-        unlikes: [],
-        highlight: [],
-        shares: [],
-        title: this.state.title,
-        description: this.state.description,
+      const postDetails = {
+        heading: this.state.title,
+        content: this.state.description,
       };
-
-      console.log("new post==>", newPost);
-
-      this.setState({ posts: this.state.posts.posts.push(newPost) });
-
+      this.props.createPost(postDetails);
       Alert.alert(
         "Post Message",
         "Post Successful !",
@@ -73,6 +67,24 @@ class PostModal extends Component {
         ],
         { cancelable: false }
       );
+
+      // const newPost = {
+      //   id: date,
+      //   userId: this.loggedInUserDetails.userId,
+      //   user: this.loggedInUserDetails.user,
+      //   username: this.loggedInUserDetails.username,
+      //   date: date,
+      //   likes: [],
+      //   unlikes: [],
+      //   highlight: [],
+      //   shares: [],
+      //   title: this.state.title,
+      //   description: this.state.description,
+      // };
+
+      // console.log("new post==>", newPost);
+
+      // this.setState({ posts: this.state.posts.posts.push(newPost) });
     } else {
       Alert.alert(
         "Post Message",
@@ -340,4 +352,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PostModal;
+export default connect(null, mapDispatchToProps)(PostModal);

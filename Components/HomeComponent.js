@@ -9,9 +9,6 @@ import {
   StatusBar,
 } from "react-native";
 
-import { baseUrl } from "../shared/baseUrl";
-import axios from "axios";
-
 import { ListItem, Icon } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Animatable from "react-native-animatable";
@@ -28,7 +25,20 @@ import {
   MenuOption,
   MenuTrigger,
 } from "react-native-popup-menu";
-import posts from "../shared/posts.js";
+
+import { connect } from "react-redux";
+import { fetchPosts, createPost } from "../Redux/ActionCreator";
+
+const mapStateToProps = (state) => {
+  return {
+    postss: state.posts,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchPosts: () => dispatch(fetchPosts()),
+  createPost: (postDetails) => dispatch(createPost(postDetails)),
+});
 
 class Home extends Component {
   constructor(props) {
@@ -39,52 +49,14 @@ class Home extends Component {
       loggedInState: true,
     };
   }
-
   componentDidMount() {
-    // axios.request(options).catch(function (error) {
-    //   if (!error.response) {
-    //     console.log("error...");
-    //   } else {
-    //     // http status code
-    //     const code = error.response.status;
-    //     // response data
-    //     const response = error.response.data;
-    //   }
-    // });
-    axios
-      .get("https://calender.bloggernepal.com/api/today")
-      .then((response) => {
-        // console.log("hi");
-        console.log("response");
-        // dispatch(addPosts(response));
-      })
-      .catch((error) => {
-        console.log("statuscode", error);
-        console.log("hi");
-        // dispatch(postsFailed(error));
-      });
-    // return fetch("https://calender.bloggernepal.com/api/today")
-    //   .then(
-    //     (response) => {
-    //       console.log("hi");
-    //       if (response.ok) {
-    //         return response;
-    //       } else {
-    //         var error = new Error(
-    //           "Error " + response.status + ": " + response.statusText
-    //         );
-    //         error.response = response;
-    //         throw error;
-    //       }
-    //     },
-    //     (error) => {
-    //       var errmess = new Error(error.message);
-    //       throw errmess;
-    //     }
-    //   )
-    //   .then((response) => response.json())
-    //   .then((posts) => console.log("success"))
-    //   .catch((error) => console.log("failed==>error", error));
+    console.log("state==>", this.props.postss.posts);
+
+    this.props.fetchPosts();
+    const postDetails = {
+      heading: "head",
+      content: "this is content",
+    };
   }
 
   async handleHighligted(pid) {
@@ -204,13 +176,13 @@ class Home extends Component {
                   source: { uri: "./assets/favicon.png" },
                   showEditButton: true,
                 }}
-                title={item.user}
-                subtitle={`@` + item.username}
+                title={item.by.name}
+                subtitle={`@` + item.by.username}
                 onPress={() =>
                   navigation.navigate("UserDetail", {
-                    name: item.username,
-                    userId: item.userId,
-                    postId: item.id,
+                    name: item.by.username,
+                    userId: item.by._id,
+                    postId: item._id,
                     loggedIn: this.state.loggedInId,
                     loggedInState: this.state.loggedInState,
                   })
@@ -225,7 +197,7 @@ class Home extends Component {
               }}
             >
               {this.state.loggedInState ? (
-                item.userId === this.state.loggedInId ? (
+                item.by._id === this.state.loggedInId ? (
                   <MenuProvider>
                     <Menu
                       onSelect={(value) => {
@@ -234,9 +206,9 @@ class Home extends Component {
                             navigation: navigation,
                             selected: value,
                             pId: item.id,
-                            userId: this.state.loggedInId,
-                            titleValue: item.title,
-                            descriptionValue: item.description,
+                            userId: item.by._id,
+                            titleValue: item.heading,
+                            descriptionValue: item.content,
                           });
                         } else if (value === 2) {
                           Alert.alert(
@@ -245,7 +217,7 @@ class Home extends Component {
                             [
                               {
                                 text: "Yes",
-                                onPress: () => this.handleDelete(item.id),
+                                onPress: () => this.handleDelete(item.by._id),
                               },
                               {
                                 text: "No",
@@ -306,14 +278,14 @@ class Home extends Component {
           </View>
           <View style={styles.postContainer}>
             <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-              {item.title}
+              {item.heading}
             </Text>
             <Text style={{ fontSize: 14, fontStyle: "italic" }}>
-              {item.date}
+              {item.updatedAt}
             </Text>
           </View>
           <View style={styles.description}>
-            <Text style={{ fontSize: 16 }}>{item.description}</Text>
+            <Text style={{ fontSize: 16 }}>{item.content}</Text>
           </View>
           <View style={styles.lineSeparator} />
           <View style={styles.reactionContainer}>
@@ -322,52 +294,58 @@ class Home extends Component {
                 <Icons
                   raised
                   reverse
-                  name={
-                    item.highlight.some((a) => a === this.state.loggedInId)
-                      ? "heart"
-                      : "heart-o"
-                  }
+                  name="heart-o"
+                  // name={
+                  //   item.highlight.some((a) => a === this.state.loggedInId)
+                  //     ? "heart"
+                  //     : "heart-o"
+                  // }
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() => this.handleHighligted(item.id)}
+                  onPress={() => this.handleHighligted(item.by._id)}
                 />
                 <Text>Favorite</Text>
-                <Text>{item.highlight.length}</Text>
+                <Text>22</Text>
+                {/* <Text>{item.highlight.length}</Text> */}
               </View>
               <View style={styles.icons}>
                 <Icons
                   raised
                   reverse
-                  name={
-                    item.likes.some((a) => a === this.state.loggedInId)
-                      ? "thumbs-up"
-                      : "thumbs-o-up"
-                  }
+                  name="thumbs-o-up"
+                  // name={
+                  //   item.likes.some((a) => a === this.state.loggedInId)
+                  //     ? "thumbs-up"
+                  //     : "thumbs-o-up"
+                  // }
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() => this.handleLiked(item.id)}
+                  onPress={() => this.handleLiked(item.by._id)}
                 />
                 <Text>Likes</Text>
-                <Text>{item.likes.length}</Text>
+                <Text>23</Text>
+                {/* <Text>{item.likes.length}</Text> */}
               </View>
               <View style={styles.icons}>
                 <Icons
                   raised
                   reverse
-                  name={
-                    item.unlikes.some((a) => a === this.state.loggedInId)
-                      ? "thumbs-down"
-                      : "thumbs-o-down"
-                  }
+                  name="thumbs-o-down"
+                  // name={
+                  //   item.unlikes.some((a) => a === this.state.loggedInId)
+                  //     ? "thumbs-down"
+                  //     : "thumbs-o-down"
+                  // }
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() => this.handleUnliked(item.id)}
+                  onPress={() => this.handleUnliked(item.by._id)}
                 />
                 <Text>Unlikes</Text>
-                <Text>{item.unlikes.length}</Text>
+                <Text>32</Text>
+                {/* <Text>{item.unlikes.length}</Text> */}
               </View>
               <View style={styles.icons}>
                 <Icons
@@ -378,11 +356,12 @@ class Home extends Component {
                   size={32}
                   color=""
                   onPress={() =>
-                    this.handleShare(item.title, item.description, item.id)
+                    this.handleShare(item.heading, item.content, item.by._id)
                   }
                 />
                 <Text>Share</Text>
-                <Text>{item.shares.length}</Text>
+                <Text>25</Text>
+                {/* <Text>{item.shares.length}</Text> */}
               </View>
             </View>
           </View>
@@ -392,9 +371,9 @@ class Home extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
-          data={this.state.posts.posts}
+          data={this.props.postss.posts}
           renderItem={RenderPost}
-          keyExtractor={(item) => item.id.toString()}
+          // keyExtractor={(item) => item.id.toString()}
         />
         {this.state.loggedInState ? (
           <FloatMenu navigation={navigation} />
@@ -458,4 +437,4 @@ const styles = StyleSheet.create({
   description: { marginLeft: 10 },
 });
 
-export default Home;
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
