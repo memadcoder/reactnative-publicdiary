@@ -27,7 +27,11 @@ import {
 } from "react-native-popup-menu";
 
 import { connect } from "react-redux";
-import { fetchPosts, createPost } from "../Redux/ActionCreator";
+import {
+  fetchPosts,
+  createPost,
+  createHighlight,
+} from "../Redux/ActionCreator";
 
 const mapStateToProps = (state) => {
   return {
@@ -39,10 +43,10 @@ const mapStateToProps = (state) => {
       suspended: false,
       contentWarn: false,
       _id: "5ed8d7fcfd3da42bc426992a",
-      name: "ram",
-      email: "ram@gmail.com",
-      username: "ram",
-      username_lower: "ram",
+      name: "mad",
+      email: "mad@gmail.com",
+      username: "mad",
+      username_lower: "mad",
       password: "$2a$12$wVc4mLRC37j3ywr0SmdGYunggy1hx3VxkrhvosK1UxtfHWEXXxbJG",
       __v: 0,
     },
@@ -52,6 +56,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   fetchPosts: () => dispatch(fetchPosts()),
   createPost: (postDetails) => dispatch(createPost(postDetails)),
+  createHighlight: (pid, postDetails) =>
+    dispatch(createHighlight(pid, postDetails)),
 });
 
 class Home extends Component {
@@ -64,29 +70,19 @@ class Home extends Component {
     };
   }
   componentDidMount() {
-    console.log("state==>", this.props.postss.posts);
-
     this.props.fetchPosts();
-    const postDetails = {
-      heading: "head",
-      content: "this is content",
-    };
   }
 
-  async handleHighligted(pid) {
-    const postState = this.state.posts.posts;
-    const post = postState.filter((post) => post.id === pid);
+  async handleHighligted(pid, content, heading, username, name) {
+    var postDetails = {
+      highlightedEntry: { content: content, heading: heading },
 
-    post[0].highlight.indexOf(this.state.loggedInId) === -1
-      ? post[0].highlight.push(this.state.loggedInId)
-      : post[0].highlight.pop(this.state.loggedInId);
-
-    // post[0].highlight.push(this.state.loggedInId);
-
-    const toPost = post[0];
-    // console.log("object to push======>", toPost);
-    await this.setState({ ...this.state.posts.posts, toPost });
-    // console.log("current state", this.state.posts);
+      highlightedBy: {
+        name: this.props.by.name,
+        username: this.props.by.username,
+      },
+    };
+    this.props.createHighlight(pid, postDetails);
   }
 
   async handleLiked(pid) {
@@ -318,7 +314,15 @@ class Home extends Component {
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() => this.handleHighligted(this.props.by._id)}
+                  onPress={() =>
+                    this.handleHighligted(
+                      item._id,
+                      item.content,
+                      item.heading,
+                      item.by.username,
+                      item.by.name
+                    )
+                  }
                 />
                 <Text>Favorite</Text>
                 <Text>22</Text>
@@ -395,7 +399,11 @@ class Home extends Component {
           // keyExtractor={(item) => item.id.toString()}
         />
         {this.state.loggedInState ? (
-          <FloatMenu navigation={navigation} />
+          <FloatMenu
+            navigation={navigation}
+            name={this.props.by.name}
+            username={this.props.by.username}
+          />
         ) : (
           <View></View>
         )}

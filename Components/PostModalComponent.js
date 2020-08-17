@@ -54,6 +54,8 @@ class PostModal extends Component {
       const postDetails = {
         heading: this.state.title,
         content: this.state.description,
+        name: this.props.route.params.name,
+        username: this.props.route.params.username,
       };
       this.props.createPost(postDetails);
       Alert.alert(
@@ -138,6 +140,7 @@ class PostModal extends Component {
 
   render() {
     const { navigation } = this.props;
+    console.log("navigation in postmodalcomponent", this.props);
     return (
       <View style={{ backgroundColor: "white", margin: 10, padding: 10 }}>
         <Modal

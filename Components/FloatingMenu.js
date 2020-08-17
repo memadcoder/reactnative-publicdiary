@@ -7,7 +7,7 @@ import PostModal from "./PostModalComponent";
 class FloatMenu extends Component {
   render() {
     const { navigation } = this.props;
-
+    console.log("name form floatMenu==>", this.props.name);
     return (
       <ActionButton buttonColor="black">
         <ActionButton.Item
@@ -21,6 +21,8 @@ class FloatMenu extends Component {
             onPress={() =>
               navigation.navigate("PostModal", {
                 navigation: navigation,
+                name: this.props.name,
+                username: this.props.username,
               })
             }
           />

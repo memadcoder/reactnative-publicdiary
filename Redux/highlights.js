@@ -19,6 +19,15 @@ export const highlights = (
     case ActionTypes.HIGHLIGHTS_FAILED:
       return { ...state, isLoading: false, errMess: action.payload };
 
+    case ActionTypes.UPDATE_HIGHLIGHTS:
+      return {
+        ...state,
+        highlights: state.highlights.concat(action.payload),
+      };
+
+    case ActionTypes.UPDATE_HIGHLIGHTS_FAILED:
+      return { ...state, isLoading: false, errMess: action.payload };
+
     default:
       return state;
   }

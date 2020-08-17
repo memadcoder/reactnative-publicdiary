@@ -31,30 +31,19 @@ export const postsFailed = (errmess) => ({
   payload: errmess,
 });
 
-export const fetchHighlights = () => (dispatch) => {
+export const fetchHighlightsByUserName = (username) => (dispatch) => {
   dispatch(highlightsLoading());
 
-  return fetch(baseUrl + "highlights")
-    .then(
-      (response) => {
-        if (response.ok) {
-          return response;
-        } else {
-          var error = new Error(
-            "Error " + response.status + ": " + response.statusText
-          );
-          error.response = response;
-          throw error;
-        }
-      },
-      (error) => {
-        var errmess = new Error(error.message);
-        throw errmess;
-      }
-    )
-    .then((response) => response.json())
-    .then((highlights) => dispatch(addHighlights(highlights)))
-    .catch((error) => dispatch(highlightsFailed(error.message)));
+  axios
+    .get(baseUrl + "entry/highlight/" + username)
+    .then(function (response) {
+      console.log("highlights from server=>", response.data.highLights);
+      dispatch(addHighlights(response.data.highLights));
+    })
+    .catch(function (error) {
+      console.log(error);
+      dispatch(highlightsFailed(error));
+    });
 };
 
 export const highlightsLoading = () => ({
@@ -79,6 +68,10 @@ export const createPost = (postDetails) => (dispatch) => {
       content: postDetails.content,
     })
     .then(function (response) {
+      response.data.newEntry.by = {
+        name: postDetails.name,
+        username: postDetails.username,
+      };
       console.log("post to update=>", response.data.newEntry);
       dispatch(updatePosts(response.data.newEntry));
     })
@@ -125,5 +118,35 @@ export const loadEntries = (entries) => ({
 
 export const entriesLoadFailed = (errmess) => ({
   type: ActionTypes.ENTRIES_LOAD_FAILED,
+  payload: errmess,
+});
+
+export const createHighlight = (postId, postDetails) => (dispatch) => {
+  console.log("post Id to highlight=>", postId);
+  console.log("post Details to highlight", postDetails);
+  axios
+    .post(baseUrl + "entry/highlight/" + postId)
+    .then(function (response) {
+      response.data.newEntry.highlightedEntry = postDetails.highlightedEntry;
+      response.data.newEntry.highlightedBy = postDetails.highlightedBy;
+
+      console.log("highlight post to update=>", response.data.newEntry);
+      dispatch(updateHighlights(response.data.newEntry));
+    })
+    .catch(function (error) {
+      console.log(error);
+      dispatch(updateHighlightFailed(error));
+    });
+
+  // dispatch(addFavorite(dishId));
+};
+
+export const updateHighlights = (update) => ({
+  type: ActionTypes.UPDATE_HIGHLIGHTS,
+  payload: update,
+});
+
+export const updateHighlightFailed = (errmess) => ({
+  type: ActionTypes.UPDATE_HIGHLIGHTS_FAILED,
   payload: errmess,
 });
