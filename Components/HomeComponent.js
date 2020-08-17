@@ -32,6 +32,20 @@ import { fetchPosts, createPost } from "../Redux/ActionCreator";
 const mapStateToProps = (state) => {
   return {
     postss: state.posts,
+    by: {
+      isAdmin: false,
+      blockedUsers: [],
+      reports: 0,
+      suspended: false,
+      contentWarn: false,
+      _id: "5ed8d7fcfd3da42bc426992a",
+      name: "ram",
+      email: "ram@gmail.com",
+      username: "ram",
+      username_lower: "ram",
+      password: "$2a$12$wVc4mLRC37j3ywr0SmdGYunggy1hx3VxkrhvosK1UxtfHWEXXxbJG",
+      __v: 0,
+    },
   };
 };
 
@@ -180,8 +194,8 @@ class Home extends Component {
                 subtitle={`@` + item.by.username}
                 onPress={() =>
                   navigation.navigate("UserDetail", {
-                    name: item.by.username,
-                    userId: item.by._id,
+                    name: this.props.by.username,
+                    userId: this.props.by._id,
                     postId: item._id,
                     loggedIn: this.state.loggedInId,
                     loggedInState: this.state.loggedInState,
@@ -197,7 +211,7 @@ class Home extends Component {
               }}
             >
               {this.state.loggedInState ? (
-                item.by._id === this.state.loggedInId ? (
+                this.props.by._id === this.state.loggedInId ? (
                   <MenuProvider>
                     <Menu
                       onSelect={(value) => {
@@ -206,7 +220,7 @@ class Home extends Component {
                             navigation: navigation,
                             selected: value,
                             pId: item.id,
-                            userId: item.by._id,
+                            userId: this.props.by._id,
                             titleValue: item.heading,
                             descriptionValue: item.content,
                           });
@@ -217,7 +231,8 @@ class Home extends Component {
                             [
                               {
                                 text: "Yes",
-                                onPress: () => this.handleDelete(item.by._id),
+                                onPress: () =>
+                                  this.handleDelete(this.props.by._id),
                               },
                               {
                                 text: "No",
@@ -303,7 +318,7 @@ class Home extends Component {
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() => this.handleHighligted(item.by._id)}
+                  onPress={() => this.handleHighligted(this.props.by._id)}
                 />
                 <Text>Favorite</Text>
                 <Text>22</Text>
@@ -322,7 +337,7 @@ class Home extends Component {
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() => this.handleLiked(item.by._id)}
+                  onPress={() => this.handleLiked(this.props.by._id)}
                 />
                 <Text>Likes</Text>
                 <Text>23</Text>
@@ -341,7 +356,7 @@ class Home extends Component {
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() => this.handleUnliked(item.by._id)}
+                  onPress={() => this.handleUnliked(this.props.by._id)}
                 />
                 <Text>Unlikes</Text>
                 <Text>32</Text>
@@ -356,7 +371,11 @@ class Home extends Component {
                   size={32}
                   color=""
                   onPress={() =>
-                    this.handleShare(item.heading, item.content, item.by._id)
+                    this.handleShare(
+                      item.heading,
+                      item.content,
+                      this.props.by._id
+                    )
                   }
                 />
                 <Text>Share</Text>

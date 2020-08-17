@@ -9,6 +9,20 @@ import Icons from "react-native-vector-icons/FontAwesome";
 
 import POSTS from "../shared/posts";
 
+import { connect } from "react-redux";
+import { fetchEntriesByUserName } from "../Redux/ActionCreator";
+
+const mapStateToProps = (state) => {
+  return {
+    entries: state.userEntries,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchEntriesByUserName: (userName) =>
+    dispatch(fetchEntriesByUserName(userName)),
+});
+
 class UserDetail extends Component {
   constructor(props) {
     super(props);
@@ -16,6 +30,12 @@ class UserDetail extends Component {
       posts: POSTS,
       loggedInId: 1,
     };
+  }
+
+  componentDidMount() {
+    var username = this.props.route.params.name;
+    console.log("user entries==>", this.props.entries);
+    this.props.fetchEntriesByUserName(username);
   }
 
   async handleHighligted(pid) {
@@ -111,8 +131,8 @@ class UserDetail extends Component {
                   source: { uri: "./assets/favicon.png" },
                   showEditButton: true,
                 }}
-                title={item.user}
-                subtitle={`@` + item.username}
+                title={item.by.name}
+                subtitle={`@` + item.by.username}
               />
             </View>
             <View
@@ -125,14 +145,14 @@ class UserDetail extends Component {
           </View>
           <View style={styles.postContainer}>
             <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-              {item.title}
+              {item.heading}
             </Text>
             <Text style={{ fontSize: 14, fontStyle: "italic" }}>
               {item.date}
             </Text>
           </View>
           <View style={styles.description}>
-            <Text style={{ fontSize: 16 }}>{item.description}</Text>
+            <Text style={{ fontSize: 16 }}>{item.content}</Text>
           </View>
           <View style={styles.lineSeparator} />
           <View style={styles.reactionContainer}>
@@ -141,52 +161,58 @@ class UserDetail extends Component {
                 <Icons
                   raised
                   reverse
-                  name={
-                    item.highlight.some((a) => a === this.state.loggedInId)
-                      ? "heart"
-                      : "heart-o"
-                  }
+                  name="heart-o"
+                  // {
+                  //   item.highlight.some((a) => a === this.state.loggedInId)
+                  //     ? "heart"
+                  //     : "heart-o"
+                  // }
                   type="font-awesome"
                   size={32}
                   color=""
                   onPress={() => this.handleHighligted(item.id)}
                 />
                 <Text>Favorite</Text>
-                <Text>{item.highlight.length}</Text>
+                <Text>22</Text>
+                {/* <Text>{item.highlight.length}</Text> */}
               </View>
               <View style={styles.icons}>
                 <Icons
                   raised
                   reverse
-                  name={
-                    item.likes.some((a) => a === this.state.loggedInId)
-                      ? "thumbs-up"
-                      : "thumbs-o-up"
-                  }
+                  name="thumbs-o-up"
+                  // {
+                  //   item.likes.some((a) => a === this.state.loggedInId)
+                  //     ? "thumbs-up"
+                  //     : "thumbs-o-up"
+                  // }
                   type="font-awesome"
                   size={32}
                   color=""
                   onPress={() => this.handleLiked(item.id)}
                 />
                 <Text>Likes</Text>
-                <Text>{item.likes.length}</Text>
+                <Text>22</Text>
+                {/* <Text>{item.likes.length}</Text> */}
               </View>
               <View style={styles.icons}>
                 <Icons
                   raised
                   reverse
-                  name={
-                    item.unlikes.some((a) => a === this.state.loggedInId)
-                      ? "thumbs-down"
-                      : "thumbs-o-down"
-                  }
+                  name="thumbs-o-down"
+                  // {
+                  //   item.unlikes.some((a) => a === this.state.loggedInId)
+                  //     ? "thumbs-down"
+                  //     : "thumbs-o-down"
+                  // }
                   type="font-awesome"
                   size={32}
                   color=""
                   onPress={() => this.handleUnliked(item.id)}
                 />
                 <Text>UnLikes</Text>
-                <Text>{item.unlikes.length}</Text>
+                <Text>22</Text>
+                {/* <Text>{item.unlikes.length}</Text> */}
               </View>
               <View style={styles.icons}>
                 <Icons
@@ -196,10 +222,11 @@ class UserDetail extends Component {
                   type="font-awesome"
                   size={32}
                   color=""
-                  onPress={() => this.handleShare(item.title, item.description)}
+                  onPress={() => this.handleShare(item.heading, item.content)}
                 />
                 <Text>Shares</Text>
-                <Text>{item.shares.length}</Text>
+                <Text>22</Text>
+                {/* <Text>{item.shares.length}</Text> */}
               </View>
             </View>
           </View>
@@ -209,11 +236,9 @@ class UserDetail extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <FlatList
-          data={this.state.posts.posts.filter(
-            (userPosts) => userPosts.userId == id
-          )}
+          data={this.props.entries.userEntry}
           renderItem={RenderDish}
-          keyExtractor={(item) => item.id.toString()}
+          // keyExtractor={(item) => item.id.toString()}
         />
       </SafeAreaView>
     );
@@ -272,4 +297,4 @@ const styles = StyleSheet.create({
   description: { marginLeft: 10 },
 });
 
-export default UserDetail;
+export default connect(mapStateToProps, mapDispatchToProps)(UserDetail);

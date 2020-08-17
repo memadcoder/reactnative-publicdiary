@@ -8,7 +8,7 @@ export const fetchPosts = () => (dispatch) => {
   axios
     .get(baseUrl + "entry")
     .then((response) => {
-      // console.log("returned from server==>", response);
+      // console.log("returned from server==>", response.data);
       dispatch(addPosts(response.data.entries));
     })
     .catch((error) => {
@@ -97,5 +97,33 @@ export const updatePosts = (update) => ({
 
 export const updateFailed = (errmess) => ({
   type: ActionTypes.UPDATE_POSTS_FAILED,
+  payload: errmess,
+});
+
+export const fetchEntriesByUserName = (userName) => (dispatch) => {
+  dispatch(entriesLoading());
+  axios
+    .get(baseUrl + "entry/" + userName)
+    .then((response) => {
+      console.log("user entries from server", response.data);
+      dispatch(loadEntries(response.data.entries));
+    })
+    .catch((error) => {
+      console.log(error);
+      dispatch(entriesLoadFailed(error));
+    });
+};
+
+export const entriesLoading = () => ({
+  type: ActionTypes.ENTRIES_LOADING,
+});
+
+export const loadEntries = (entries) => ({
+  type: ActionTypes.LOAD_ENTRIES,
+  payload: entries,
+});
+
+export const entriesLoadFailed = (errmess) => ({
+  type: ActionTypes.ENTRIES_LOAD_FAILED,
   payload: errmess,
 });
