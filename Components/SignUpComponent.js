@@ -18,37 +18,76 @@ import Feather from "react-native-vector-icons/Feather";
 
 import { useTheme } from "react-native-paper";
 
-const SignUpScreen = ({ navigation }) => {
+import { connect } from "react-redux";
+import { registerNewUser } from "../Redux/ActionCreator";
+
+const mapStateToProps = (state) => {
+  return {
+    newEntry: state.registerUser,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  registerNewUser: (userDetails, navigation) =>
+    dispatch(registerNewUser(userDetails, navigation)),
+});
+
+const SignUpScreen = ({ navigation, registerNewUser, newEntry }) => {
   const [data, setData] = React.useState({
+    name: "",
     username: "",
+    email: "",
     password: "",
     confirmPassword: "",
-    check_textInputChange: false,
+    check_textUserNameChange: false,
+    check_emailChange: false,
+    check_textNameChange: false,
     secureTextEntry: true,
     confirmSecureTextEntry: true,
     isValidUser: true,
+    isValidEmail: true,
     isValidPassword: true,
     isConfirmValidPassword: true,
+    isValidName: true,
+    isPasswordMatched: true,
   });
 
   const { colors } = useTheme();
 
   // const { signIn } = React.useContext(AuthContext);
 
-  const textInputChange = (val) => {
+  const textUserNameChange = (val) => {
     if (val.trim().length >= 4) {
       setData({
         ...data,
         username: val,
-        check_textInputChange: true,
+        check_textUserNameChange: true,
         isValidUser: true,
       });
     } else {
       setData({
         ...data,
         username: val,
-        check_textInputChange: false,
+        check_textUserNameChange: false,
         isValidUser: false,
+      });
+    }
+  };
+
+  const textNameChange = (val) => {
+    if (val.trim().length >= 4) {
+      setData({
+        ...data,
+        name: val,
+        check_textNameChange: true,
+        isValidName: true,
+      });
+    } else {
+      setData({
+        ...data,
+        name: val,
+        check_textNameChange: false,
+        isValidName: false,
       });
     }
   };
@@ -113,6 +152,100 @@ const SignUpScreen = ({ navigation }) => {
     }
   };
 
+  const handleValidName = (val) => {
+    if (val.trim().length >= 4) {
+      setData({
+        ...data,
+        isValidName: true,
+      });
+    } else {
+      setData({
+        ...data,
+        isValidName: false,
+      });
+    }
+  };
+
+  const textEmailChange = (val) => {
+    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (val.match(mailformat)) {
+      setData({
+        ...data,
+        email: val,
+        check_emailChange: true,
+        isValidEmail: true,
+      });
+    } else {
+      setData({
+        ...data,
+        email: val,
+        check_emailChange: false,
+        isValidEmail: false,
+      });
+    }
+  };
+
+  const handleValidEmail = (val) => {
+    var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (val.match(mailformat)) {
+      setData({
+        ...data,
+        isValidEmail: true,
+      });
+    } else {
+      setData({
+        ...data,
+        isValidEmail: false,
+      });
+    }
+  };
+
+  const handlePasswordMatch = () => {
+    if (data.password === data.confirmPassword) {
+      setData({
+        ...data,
+        isPasswordMatched: true,
+      });
+    } else {
+      setData({
+        ...data,
+        isPasswordMatched: false,
+      });
+    }
+  };
+
+  const handleSubmit = async () => {
+    // var date = moment().utcOffset("+05:30").format(" Y-MMM-DD hh:mm a");
+    console.log("navigation", navigation);
+    if (
+      data.isValidUser &&
+      data.isValidEmail &&
+      data.isValidPassword &&
+      data.isConfirmValidPassword &&
+      data.isPasswordMatched
+    ) {
+      const userDetails = {
+        name: data.name,
+        userName: data.username,
+        email: data.email,
+        password: data.password,
+      };
+      registerNewUser(userDetails, navigation);
+    } else {
+      Alert.alert(
+        "Registration",
+        "Enter the valid entry",
+        [
+          {
+            text: "Ok",
+            onPress: () => navigation.navigate("SignUp"),
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor="black" barStyle="light-content" />
@@ -133,6 +266,44 @@ const SignUpScreen = ({ navigation }) => {
             },
           ]}
         >
+          Name
+        </Text>
+        <View style={styles.action}>
+          <FontAwesome name="user-o" color={colors.text} size={20} />
+          <TextInput
+            placeholder="Your Name"
+            placeholderTextColor="#666666"
+            style={[
+              styles.textInput,
+              {
+                color: "black",
+              },
+            ]}
+            autoCapitalize="none"
+            onChangeText={(val) => textNameChange(val)}
+            onEndEditing={(e) => handleValidName(e.nativeEvent.text)}
+          />
+          {data.check_textNameChange ? (
+            <Animatable.View animation="bounceIn">
+              <Feather name="check-circle" color="green" size={20} />
+            </Animatable.View>
+          ) : null}
+        </View>
+        {data.isValidName ? null : (
+          <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={styles.errorMsg}>Name must be 4 characters long.</Text>
+          </Animatable.View>
+        )}
+
+        <Text
+          style={[
+            styles.text_footer,
+            {
+              color: "black",
+              marginTop: 12,
+            },
+          ]}
+        >
           Username
         </Text>
         <View style={styles.action}>
@@ -147,10 +318,10 @@ const SignUpScreen = ({ navigation }) => {
               },
             ]}
             autoCapitalize="none"
-            onChangeText={(val) => textInputChange(val)}
+            onChangeText={(val) => textUserNameChange(val)}
             onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
           />
-          {data.check_textInputChange ? (
+          {data.check_textUserNameChange ? (
             <Animatable.View animation="bounceIn">
               <Feather name="check-circle" color="green" size={20} />
             </Animatable.View>
@@ -169,7 +340,45 @@ const SignUpScreen = ({ navigation }) => {
             styles.text_footer,
             {
               color: "black",
-              marginTop: 35,
+              marginTop: 12,
+            },
+          ]}
+        >
+          Email
+        </Text>
+        <View style={styles.action}>
+          <FontAwesome name="user-o" color={colors.text} size={20} />
+          <TextInput
+            placeholder="Your Email Address"
+            placeholderTextColor="#666666"
+            style={[
+              styles.textInput,
+              {
+                color: "black",
+              },
+            ]}
+            autoCapitalize="none"
+            onChangeText={(val) => textEmailChange(val)}
+            onEndEditing={(e) => handleValidEmail(e.nativeEvent.text)}
+          />
+          {data.check_emailChange ? (
+            <Animatable.View animation="bounceIn">
+              <Feather name="check-circle" color="green" size={20} />
+            </Animatable.View>
+          ) : null}
+        </View>
+        {data.isValidEmail ? null : (
+          <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={styles.errorMsg}>Email Should be Valid</Text>
+          </Animatable.View>
+        )}
+
+        <Text
+          style={[
+            styles.text_footer,
+            {
+              color: "black",
+              marginTop: 12,
             },
           ]}
         >
@@ -211,7 +420,7 @@ const SignUpScreen = ({ navigation }) => {
             styles.text_footer,
             {
               color: "black",
-              marginTop: 35,
+              marginTop: 12,
             },
           ]}
         >
@@ -222,7 +431,7 @@ const SignUpScreen = ({ navigation }) => {
           <TextInput
             placeholder="Confirm Password"
             placeholderTextColor="#666666"
-            confirmSecureTextEntry={data.confirmSecureTextEntry ? true : false}
+            secureTextEntry={data.confirmSecureTextEntry ? true : false}
             style={[
               styles.textInput,
               {
@@ -231,6 +440,7 @@ const SignUpScreen = ({ navigation }) => {
             ]}
             autoCapitalize="none"
             onChangeText={(val) => handleConfirmPasswordChange(val)}
+            onEndEditing={(e) => handlePasswordMatch(e.nativeEvent.text)}
           />
           <TouchableOpacity onPress={updateConfirmSecureTextEntry}>
             {data.confirmSecureTextEntry ? (
@@ -247,18 +457,23 @@ const SignUpScreen = ({ navigation }) => {
             </Text>
           </Animatable.View>
         )}
+        {data.isPasswordMatched ? null : (
+          <Animatable.View animation="fadeInLeft" duration={500}>
+            <Text style={styles.errorMsg}>Password didnot matched.</Text>
+          </Animatable.View>
+        )}
 
         <TouchableOpacity>
-          <Text style={{ color: "black", marginTop: 15 }}>
+          <Text style={{ color: "black", marginTop: 12 }}>
             Forgot password?
           </Text>
         </TouchableOpacity>
         <View style={styles.button}>
           <TouchableOpacity
             style={styles.signIn}
-            // onPress={() => {
-            //   loginHandle(data.username, data.password);
-            // }}
+            onPress={() => {
+              handleSubmit();
+            }}
           >
             <LinearGradient colors={["black", "white"]} style={styles.signIn}>
               <Text
@@ -281,7 +496,7 @@ const SignUpScreen = ({ navigation }) => {
               {
                 borderColor: "black",
                 borderWidth: 1,
-                marginTop: 15,
+                marginTop: 12,
               },
             ]}
           >
@@ -302,8 +517,6 @@ const SignUpScreen = ({ navigation }) => {
   );
 };
 
-export default SignUpScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -319,7 +532,7 @@ const styles = StyleSheet.create({
     flex: 3,
     backgroundColor: "#fff",
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingVertical: 15,
   },
   text_header: {
     color: "#fff",
@@ -332,7 +545,7 @@ const styles = StyleSheet.create({
   },
   action: {
     flexDirection: "row",
-    marginTop: 10,
+    marginTop: 5,
     borderBottomWidth: 1,
     borderBottomColor: "#f2f2f2",
     paddingBottom: 5,
@@ -349,7 +562,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: "center",
-    marginTop: 50,
+    marginTop: 20,
   },
   signIn: {
     width: "100%",
@@ -363,3 +576,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUpScreen);

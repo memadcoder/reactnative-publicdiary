@@ -42,11 +42,11 @@ const mapStateToProps = (state) => {
       reports: 0,
       suspended: false,
       contentWarn: false,
-      _id: "5ed8d7fcfd3da42bc426992a",
-      name: "mad",
-      email: "mad@gmail.com",
-      username: "mad",
-      username_lower: "mad",
+      _id: "23423l4kj249234kj",
+      name: "Ramchandra",
+      email: "ram@gmail.com",
+      username: "ram",
+      username_lower: "ram",
       password: "$2a$12$wVc4mLRC37j3ywr0SmdGYunggy1hx3VxkrhvosK1UxtfHWEXXxbJG",
       __v: 0,
     },
@@ -66,7 +66,7 @@ class Home extends Component {
     this.state = {
       posts: POSTS,
       loggedInId: 1,
-      loggedInState: true,
+      loggedInState: false,
     };
   }
   componentDidMount() {
@@ -146,10 +146,10 @@ class Home extends Component {
   }
 
   handleDelete(pid) {
-    console.log(pid);
+    // console.log(pid);
     const postState = this.state.posts.posts;
     const post = postState.filter((post) => post.id !== pid);
-    console.log("after pluck of", post);
+    // console.log("after pluck of", post);
 
     const postUpdate = {
       posts: post,
@@ -190,8 +190,8 @@ class Home extends Component {
                 subtitle={`@` + item.by.username}
                 onPress={() =>
                   navigation.navigate("UserDetail", {
-                    name: this.props.by.username,
-                    userId: this.props.by._id,
+                    name: item.by.username,
+                    userId: item.by._id,
                     postId: item._id,
                     loggedIn: this.state.loggedInId,
                     loggedInState: this.state.loggedInState,

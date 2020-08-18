@@ -34,7 +34,7 @@ class UserDetail extends Component {
 
   componentDidMount() {
     var username = this.props.route.params.name;
-    console.log("user entries==>", this.props.entries);
+    // console.log("user entries==>", this.props.entries);
     this.props.fetchEntriesByUserName(username);
   }
 
@@ -79,7 +79,7 @@ class UserDetail extends Component {
   }
 
   async handleShare(title, description) {
-    console.log(title, description);
+    // console.log(title, description);
     try {
       const result = await Share.share(
         {
@@ -106,12 +106,12 @@ class UserDetail extends Component {
   }
 
   render() {
-    console.log("props in userdetails==>", this.props);
+    // console.log("props in userdetails==>", this.props);
     const { navigation } = this.props;
     const { postId, loggedInId, loggedInState } = this.props.route.params;
     const ans = this.props.route.params;
     const id = ans.userId;
-    console.log("userId=>", id);
+    // console.log("userId=>", id);
     const RenderDish = ({ item, index }) => {
       return (
         <Animatable.View
@@ -148,7 +148,7 @@ class UserDetail extends Component {
               {item.heading}
             </Text>
             <Text style={{ fontSize: 14, fontStyle: "italic" }}>
-              {item.date}
+              {item.updatedAt}
             </Text>
           </View>
           <View style={styles.description}>

@@ -27,7 +27,7 @@ const Stack = createStackNavigator();
 
 function MyDrawer() {
   // const dimensions = useWindowDimensions();
-  const loggedInState = true;
+  const loggedInState = false;
   const loggedInUserDetail = {
     name: "Madhav",
     username: "memadcoder",
