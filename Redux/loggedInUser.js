@@ -1,6 +1,6 @@
 import * as ActionTypes from "./ActionTypes";
 
-export const loggedInUser = (state = { user: {} }, action) => {
+export const loggedInUser = (state = { user: null }, action) => {
   switch (action.type) {
     case ActionTypes.LOGIN_USER_SUCCESS:
       return {

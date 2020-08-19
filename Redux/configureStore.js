@@ -6,6 +6,7 @@ import { posts } from "./posts";
 import { userEntries } from "./userEntries";
 import { registerUser } from "./registerUsers";
 import { loggedInUser } from "./loggedInUser";
+import { loggedInState } from "./loggedInState";
 
 export const ConfigureStore = () => {
   const store = createStore(
@@ -15,6 +16,7 @@ export const ConfigureStore = () => {
       userEntries,
       registerUser,
       loggedInUser,
+      loggedInState,
     }),
     applyMiddleware(thunk, logger)
   );

@@ -36,25 +36,14 @@ import {
 const mapStateToProps = (state) => {
   return {
     postss: state.posts,
-    by: {
-      isAdmin: false,
-      blockedUsers: [],
-      reports: 0,
-      suspended: false,
-      contentWarn: false,
-      _id: "23423l4kj249234kj",
-      name: "Ramchandra",
-      email: "ram@gmail.com",
-      username: "ram",
-      username_lower: "ram",
-      password: "$2a$12$wVc4mLRC37j3ywr0SmdGYunggy1hx3VxkrhvosK1UxtfHWEXXxbJG",
-      __v: 0,
-    },
+    by: state.loggedInUser,
+    loggedInState: state.loggedInState,
+    loggedInUser: state.loggedInUser,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchPosts: () => dispatch(fetchPosts()),
+  fetchPosts: (token) => dispatch(fetchPosts(token)),
   createPost: (postDetails) => dispatch(createPost(postDetails)),
   createHighlight: (pid, postDetails) =>
     dispatch(createHighlight(pid, postDetails)),
@@ -65,12 +54,17 @@ class Home extends Component {
     super(props);
     this.state = {
       posts: POSTS,
-      loggedInId: 1,
-      loggedInState: false,
     };
   }
   componentDidMount() {
-    this.props.fetchPosts();
+    console.log("state curretn", this.props.loggedInUser);
+    if (this.props.loggedInUser.user == null) {
+      var token = "";
+    } else {
+      var token = this.props.loggedInUser.user.token;
+    }
+    console.log("token from home component", token);
+    this.props.fetchPosts(token);
   }
 
   async handleHighligted(pid, content, heading, username, name) {
@@ -193,8 +187,8 @@ class Home extends Component {
                     name: item.by.username,
                     userId: item.by._id,
                     postId: item._id,
-                    loggedIn: this.state.loggedInId,
-                    loggedInState: this.state.loggedInState,
+                    loggedIn: this.props.loggedInUser.user.userId,
+                    loggedInState: this.props.loggedInState.loggedInState,
                   })
                 }
               />
@@ -206,8 +200,8 @@ class Home extends Component {
                 alignContent: "flex-start",
               }}
             >
-              {this.state.loggedInState ? (
-                this.props.by._id === this.state.loggedInId ? (
+              {this.props.loggedInState.loggedInState ? (
+                item.by._id === this.props.loggedInUser.user.userId ? (
                   <MenuProvider>
                     <Menu
                       onSelect={(value) => {
@@ -378,7 +372,7 @@ class Home extends Component {
                     this.handleShare(
                       item.heading,
                       item.content,
-                      this.props.by._id
+                      this.props.by.user.userId
                     )
                   }
                 />
@@ -398,7 +392,7 @@ class Home extends Component {
           renderItem={RenderPost}
           // keyExtractor={(item) => item.id.toString()}
         />
-        {this.state.loggedInState ? (
+        {this.props.loggedInState.loggedInState ? (
           <FloatMenu
             navigation={navigation}
             name={this.props.by.name}

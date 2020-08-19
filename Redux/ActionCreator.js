@@ -3,11 +3,17 @@ import { baseUrl } from "../shared/baseUrl";
 import axios from "axios";
 import { Alert } from "react-native";
 
-export const fetchPosts = () => (dispatch) => {
+export const fetchPosts = (token) => (dispatch) => {
+  console.log("token form fetchPosts");
   dispatch(postsLoading());
-
   axios
-    .get(baseUrl + "entry")
+    .get(baseUrl + "entry", {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "Application/json",
+        authorization: `Bearer ${token}`,
+      },
+    })
     .then((response) => {
       // console.log("returned from server==>", response.data);
       dispatch(addPosts(response.data.entries));
@@ -61,14 +67,20 @@ export const addHighlights = (highlights) => ({
   payload: highlights,
 });
 
-export const createPost = (postDetails) => (dispatch) => {
+export const createPost = (postDetails, token) => (dispatch) => {
   // console.log("post Details=>", postDetails);
+  console.log("token form create post", token);
   axios
     .post(baseUrl + "entry", {
       heading: postDetails.heading,
       content: postDetails.content,
       name: postDetails.name,
       username: postDetails.username,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-type": "Application/json",
+        Authorization: `Bearer ${token}`,
+      },
     })
     .then(function (response) {
       response.data.newEntry.by = {
@@ -203,5 +215,43 @@ export const successMessage = () => ({
 
 export const faileureMessage = () => ({
   type: ActionTypes.CREATE_USER_FAILED,
+  payload: false,
+});
+
+export const loginUser = (loginDetails, navigation) => (dispatch) => {
+  console.log("userDetails before posting", loginDetails);
+  console.log("navi", navigation);
+  axios
+    .post(baseUrl + "user/login/", {
+      userNameOrEmail: loginDetails.userNameOrEmail,
+      password: loginDetails.password,
+    })
+    .then(function (response) {
+      console.log(response.data);
+      navigation.navigate("Home"), dispatch(loginSuccess(response.data));
+      dispatch(setLogin());
+    })
+    .catch(function (error) {
+      console.log(error);
+      // dispatch(loginFailure());
+    });
+};
+
+export const loginSuccess = (data) => ({
+  type: ActionTypes.LOGIN_USER_SUCCESS,
+  payload: data,
+});
+
+export const loginFailure = () => ({
+  type: ActionTypes.LOGIN_USER_FAILED,
+});
+
+export const setLogin = () => ({
+  type: ActionTypes.SET_LOGGEDIN,
+  payload: true,
+});
+
+export const unsetLogin = () => ({
+  type: ActionTypes.UNSET_LOGGEDIN,
   payload: false,
 });

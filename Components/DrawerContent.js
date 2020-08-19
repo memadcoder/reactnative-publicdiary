@@ -15,13 +15,22 @@ import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-const DrawerContent = (props) => {
+import { connect } from "react-redux";
+
+const mapStateToProps = (state) => {
+  return {
+    loggedInState: state.loggedInState,
+    loggedInUser: state.loggedInUser,
+  };
+};
+
+const DrawerContent = ({ loggedInState, loggedInUser, navigation }) => {
   const paperTheme = useTheme();
   return (
     <View style={{ flex: 1 }}>
-      <DrawerContentScrollView {...props}>
+      <DrawerContentScrollView>
         <View style={styles.drawerContent}>
-          {props.loggedInState ? (
+          {loggedInState.loggedInState ? (
             <View style={styles.userInfoSection}>
               <View style={{ flexDirection: "row", marginTop: 15 }}>
                 <Avatar.Image
@@ -32,9 +41,9 @@ const DrawerContent = (props) => {
                   size={50}
                 />
                 <View style={{ marginLeft: 15, flexDirection: "column" }}>
-                  <Title style={styles.title}>{props.value.name}</Title>
+                  <Title style={styles.title}>{loggedInUser.user.name}</Title>
                   <Caption style={styles.caption}>
-                    @{props.value.username}
+                    @{loggedInUser.user.username}
                   </Caption>
                 </View>
               </View>
@@ -42,15 +51,15 @@ const DrawerContent = (props) => {
               <View style={styles.row}>
                 <View style={styles.section}>
                   <Paragraph style={[styles.paragraph, styles.caption]}>
-                    {props.value.totalPosts}
+                    total post
                   </Paragraph>
-                  <Caption style={styles.caption}>Posts</Caption>
+                  <Caption style={styles.caption}>11</Caption>
                 </View>
                 <View style={styles.section}>
                   <Paragraph style={[styles.paragraph, styles.caption]}>
-                    {props.value.totalLikes}
+                    total likes
                   </Paragraph>
-                  <Caption style={styles.caption}>Likes</Caption>
+                  <Caption style={styles.caption}>12</Caption>
                 </View>
               </View>
             </View>
@@ -79,17 +88,17 @@ const DrawerContent = (props) => {
               )}
               label="Home"
               onPress={() => {
-                props.navigation.navigate("Home");
+                navigation.navigate("Home");
               }}
             />
-            {props.loggedInState ? (
+            {loggedInState.loggedInState ? (
               <DrawerItem
                 icon={({ color, size }) => (
                   <Icon name="bookmark" color={color} size={size} />
                 )}
                 label="Highlights"
                 onPress={() => {
-                  props.navigation.navigate("Highlight");
+                  navigation.navigate("Highlight");
                 }}
               />
             ) : (
@@ -102,45 +111,45 @@ const DrawerContent = (props) => {
               )}
               label="Contact Us"
               onPress={() => {
-                props.navigation.navigate("ContactUs");
+                navigation.navigate("ContactUs");
               }}
             />
-            {!props.loggedInState ? (
+            {!loggedInState.loggedInState ? (
               <DrawerItem
                 icon={({ color, size }) => (
                   <Icon name="login" color={color} size={size} />
                 )}
                 label="Sign In"
                 onPress={() => {
-                  props.navigation.navigate("SignIn");
+                  navigation.navigate("SignIn");
                 }}
               />
             ) : (
               <View></View>
             )}
 
-            {!props.loggedInState ? (
+            {!loggedInState.loggedInState ? (
               <DrawerItem
                 icon={({ color, size }) => (
                   <Icon name="account-plus-outline" color={color} size={size} />
                 )}
                 label="Sign Up"
                 onPress={() => {
-                  props.navigation.navigate("SignUp");
+                  navigation.navigate("SignUp");
                 }}
               />
             ) : (
               <View></View>
             )}
 
-            {props.loggedInState ? (
+            {loggedInState.loggedInState ? (
               <DrawerItem
                 icon={({ color, size }) => (
                   <Icon name="settings-outline" color={color} size={size} />
                 )}
                 label="Settings"
                 onPress={() => {
-                  props.navigation.navigate("Setting");
+                  navigation.navigate("Setting");
                 }}
               />
             ) : (
@@ -163,7 +172,7 @@ const DrawerContent = (props) => {
           </Drawer.Section> */}
         </View>
       </DrawerContentScrollView>
-      {props.loggedInState ? (
+      {loggedInState.loggedInState ? (
         <Drawer.Section style={styles.bottomDrawerSection}>
           <DrawerItem
             icon={({ color, size }) => (
@@ -228,4 +237,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DrawerContent;
+export default connect(mapStateToProps)(DrawerContent);

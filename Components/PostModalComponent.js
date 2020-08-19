@@ -21,8 +21,14 @@ import moment from "moment";
 import { connect } from "react-redux";
 import { createPost } from "../Redux/ActionCreator";
 
+const mapStateToProps = (state) => {
+  return {
+    loggedInUser: state.loggedInUser,
+  };
+};
+
 const mapDispatchToProps = (dispatch) => ({
-  createPost: (postDetails) => dispatch(createPost(postDetails)),
+  createPost: (postDetails, token) => dispatch(createPost(postDetails, token)),
 });
 
 class PostModal extends Component {
@@ -51,13 +57,18 @@ class PostModal extends Component {
   handleSubmit(navigation) {
     // var date = moment().utcOffset("+05:30").format(" Y-MMM-DD hh:mm a");
     if (this.state.isValidTitle && this.state.isValidDescription) {
-      const postDetails = {
+      var token = this.props.loggedInUser.user.token;
+      console.log(
+        "token from postmodal component",
+        this.props.loggedInUser.user.token
+      );
+      var postDetails = {
         heading: this.state.title,
         content: this.state.description,
-        name: this.props.route.params.name,
-        username: this.props.route.params.username,
+        name: this.props.loggedInUser.user.name,
+        username: this.props.loggedInUser.user.username,
       };
-      this.props.createPost(postDetails);
+      this.props.createPost(postDetails, token);
       Alert.alert(
         "Post Message",
         "Post Successful !",
@@ -69,24 +80,6 @@ class PostModal extends Component {
         ],
         { cancelable: false }
       );
-
-      // const newPost = {
-      //   id: date,
-      //   userId: this.loggedInUserDetails.userId,
-      //   user: this.loggedInUserDetails.user,
-      //   username: this.loggedInUserDetails.username,
-      //   date: date,
-      //   likes: [],
-      //   unlikes: [],
-      //   highlight: [],
-      //   shares: [],
-      //   title: this.state.title,
-      //   description: this.state.description,
-      // };
-
-      // console.log("new post==>", newPost);
-
-      // this.setState({ posts: this.state.posts.posts.push(newPost) });
     } else {
       Alert.alert(
         "Post Message",
@@ -355,4 +348,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect(null, mapDispatchToProps)(PostModal);
+export default connect(mapStateToProps, mapDispatchToProps)(PostModal);
