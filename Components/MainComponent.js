@@ -25,29 +25,9 @@ import DrawerContent from "./DrawerContent";
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
-// import { ConfigureStore } from "../Redux/configureStore";
-// const store = ConfigureStore();
-
-// import { connect } from "react-redux";
-
-// const mapStateToProps = (state) => {
-//   return {
-//     loggedInState: state.loggedInState,
-//   };
-// };
-
 function MyDrawer(props) {
   // const dimensions = useWindowDimensions();
-  // console.log("loggedIn state", )
 
-  // console.log("state from main", store.getState().loggedInState);
-  // const loggedInState = store.getState().loggedInState.loggedInState;
-  // const loggedInUserDetail = {
-  //   name: "Madhav",
-  //   username: "memadcoder",
-  //   totalPosts: 100,
-  //   totalLikes: 80,
-  // };
   return (
     <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
       <Drawer.Screen name="Home" component={Home} />
@@ -73,8 +53,8 @@ const Main = (props) => {
             title: props.route.params.name,
             headerRight: () => (
               <ThreeDotMenu
-                loggedIn={props.route.params.loggedIn}
                 userId={props.route.params.userId}
+                loggedIn={props.route.params.loggedIn}
                 loggedInState={props.route.params.loggedInState}
                 navigation={props.navigation}
               />
@@ -107,5 +87,4 @@ const Main = (props) => {
   );
 };
 
-// export default connect(mapStateToProps)(Main);
 export default Main;

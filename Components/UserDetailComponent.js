@@ -7,8 +7,6 @@ import * as Animatable from "react-native-animatable";
 
 import Icons from "react-native-vector-icons/FontAwesome";
 
-import POSTS from "../shared/posts";
-
 import { connect } from "react-redux";
 import { fetchEntriesByUserName } from "../Redux/ActionCreator";
 
@@ -24,14 +22,6 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class UserDetail extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      posts: POSTS,
-      loggedInId: 1,
-    };
-  }
-
   componentDidMount() {
     var username = this.props.route.params.name;
     // console.log("user entries==>", this.props.entries);
@@ -108,7 +98,7 @@ class UserDetail extends Component {
   render() {
     // console.log("props in userdetails==>", this.props);
     const { navigation } = this.props;
-    const { postId, loggedInId, loggedInState } = this.props.route.params;
+    const { postId, loggedIn, loggedInState, userId } = this.props.route.params;
     const ans = this.props.route.params;
     const id = ans.userId;
     // console.log("userId=>", id);

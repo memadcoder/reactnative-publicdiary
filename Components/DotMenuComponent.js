@@ -10,6 +10,22 @@ import {
 } from "react-native-popup-menu";
 import { Icon } from "react-native-elements";
 
+import { connect } from "react-redux";
+import { blockUser, reportUser } from "../Redux/ActionCreator";
+
+const mapStateToProps = (state) => {
+  return {
+    loggedInUser: state.loggedInUser,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  blockUser: (userIdToReport, token) =>
+    dispatch(blockUser(userIdToReport, token)),
+  reportUser: (userIdToReport, token) =>
+    dispatch(reportUser(userIdToReport, token)),
+});
+
 function ThreeDotMenu(props) {
   var { navigation } = props;
   var loggedIn = props.loggedIn;
@@ -23,6 +39,26 @@ function ThreeDotMenu(props) {
     "loggedInState==>",
     loggedInState
   );
+
+  const handleReportOrBlock = (selectedOption) => {
+    var token = this.props.loggedInUser.user.token;
+    if (selectedOption === 1) {
+      console.log("report user");
+      console.log(
+        "userId to report",
+        userId,
+        "\n reported by userId",
+        loggedIn
+      );
+      this.props.reportUser(userId, token);
+    } else if (selectedOption === 2) {
+      console.log("block user");
+      console.log("userId to block", userId, "\n block by userId", loggedIn);
+      this.props.blockUser(userId, token);
+    } else {
+      console.log("wrong choice");
+    }
+  };
 
   if (loggedInState === true) {
     if (loggedIn === userId) {
@@ -54,7 +90,7 @@ function ThreeDotMenu(props) {
     } else {
       return (
         <MenuProvider>
-          <Menu onSelect={(value) => alert(value)}>
+          <Menu onSelect={(value) => handleReportOrBlock(value)}>
             <MenuTrigger>
               <Icon
                 name={"dots-three-vertical"}
@@ -82,4 +118,4 @@ function ThreeDotMenu(props) {
   }
 }
 
-export default ThreeDotMenu;
+export default connect(mapStateToProps, mapDispatchToProps)(ThreeDotMenu);

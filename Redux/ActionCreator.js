@@ -11,7 +11,7 @@ export const fetchPosts = (token) => (dispatch) => {
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Content-type": "Application/json",
-        authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     })
     .then((response) => {
@@ -255,3 +255,53 @@ export const unsetLogin = () => ({
   type: ActionTypes.UNSET_LOGGEDIN,
   payload: false,
 });
+
+export const blockUser = (userId, token) => (dispatch) => {
+  console.log("Details before blocking", userId, token);
+  axios
+    .post(baseUrl + "user/block/" + userId, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(function (response) {
+      console.log("blocking succeded");
+      fetchPosts(token);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
+export const reportUser = (userId, token) => (dispatch) => {
+  console.log("Details before report", userId, token);
+  axios
+    .post(baseUrl + "user/report/" + userId, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(function (response) {
+      console.log("reporting succeded");
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
+export const reportPost = (postId, reportedCase, token) => (dispatch) => {
+  console.log("Details before report", postId, token);
+  axios
+    .post(baseUrl + "entry/report/" + postId, {
+      reportedCase: reportedCase,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(function (response) {
+      console.log("reporting succeded");
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};

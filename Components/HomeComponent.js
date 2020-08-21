@@ -258,7 +258,13 @@ class Home extends Component {
                   </MenuProvider>
                 ) : (
                   <MenuProvider>
-                    <Menu onSelect={(value) => alert("report ")}>
+                    <Menu
+                      onSelect={(value) =>
+                        navigation.navigate("ReportModal", {
+                          postId: item.id,
+                        })
+                      }
+                    >
                       <MenuTrigger>
                         <Icon
                           name={"dots-three-vertical"}

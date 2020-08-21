@@ -5,6 +5,20 @@ import { Icon } from "react-native-elements";
 
 import RadioForm from "react-native-simple-radio-button";
 
+import { connect } from "react-redux";
+import { reportPost, reportUser } from "../Redux/ActionCreator";
+
+const mapStateToProps = (state) => {
+  return {
+    loggedInUser: state.loggedInUser,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  reportPost: (postIdToReport, reportedCase, token) =>
+    dispatch(reportPost(postIdToReport, reportedCase, token)),
+});
+
 var radio_props = [
   { label: "Hate Speech", value: 1 },
   { label: "Spam or Scam", value: 2 },
@@ -17,7 +31,7 @@ class ReportModal extends Component {
     super(props);
     this.state = {
       modalVisible: true,
-      count: "1",
+      count: 1,
     };
   }
 
@@ -25,8 +39,19 @@ class ReportModal extends Component {
     this.setState({ modalVisible: true });
   }
 
+  handlePostReport(navigation, postId) {
+    var token = this.props.loggedInUser.user.token;
+    var reported = radio_props.filter((obj) => {
+      return obj.value === this.state.count;
+    });
+    var reportedCase = reported.label;
+    this.props.reportPost(postId, reportedCase, token);
+    navigation.navigate("Home");
+  }
+
   render() {
     const { navigation } = this.props;
+    var { postId } = this.props.route.params;
 
     return (
       <Modal
@@ -44,7 +69,7 @@ class ReportModal extends Component {
           />
           <View>
             <Button
-              onPress={() => navigation.navigate("Home")}
+              onPress={() => this.handlePostReport(navigation, postId)}
               color="#512DA8"
               title="Submit"
             />
@@ -76,4 +101,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ReportModal;
+export default connect(mapStateToProps, mapDispatchToProps)(ReportModal);
